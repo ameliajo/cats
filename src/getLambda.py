@@ -1,8 +1,5 @@
 import numpy as np
 from testRho import *
-#from scipy import special 
-#import scipy
-#import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 
 kbT = 0.025
@@ -18,7 +15,6 @@ P = [fullRho[b]/(2*fullBeta[b]*np.sinh(fullBeta[b]*0.5)) if fullBeta[b] != 0.0 e
 
 integrand = [P[b]*np.exp(-fullBeta[b]*0.5) for b in range(len(fullE))]
 lambda_s = np.trapz(integrand,x=fullBeta)
-print(lambda_s)
 
 betas = [E/kbT for E in energies]
 integrand = [2.0*rho[1]/(spacing/kbT)**2]
@@ -26,7 +22,6 @@ for b in range(1,len(energies)):
     integrand.append(rho[b]/(betas[b]) * (np.cosh(betas[b]*0.5)/np.sinh(betas[b]*0.5))*np.exp(betas[b]))
 
 lambda_s = np.trapz([integrand[b]*np.exp(-betas[b]) for b in range(len(betas))],x=betas)
-print(lambda_s)
 
 
 
@@ -39,7 +34,6 @@ for N in range(1,100):
         lambda_s += weights[i]*getVal(betas,points[i],integrand)
     lambda_list.append(lambda_s)
 plt.plot(lambda_list)
-
 plt.show()
 
 
