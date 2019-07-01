@@ -9,13 +9,13 @@ def getB(x,xMin,xMax,bMin,bMax):
     return (x-xMin)/(xMax-xMin) * (bMax-bMin) + bMin
 
 
-def integrateBetasTrapezoid(betas,rho,t):
+def integrate_F_BetasTrapezoid(betas,rho,t):
     integrand = []
     for i,b in enumerate(betas):
         integrand.append(rho[i]/(b*np.tanh(b*0.5))*np.cos(b*t))
     return np.trapz(integrand,x=betas)
 
-def integrateXsTrapezoid(betas,rho,t):
+def integrate_F_XsTrapezoid(betas,rho,t):
     xs = [getX(b,-1,1,betas[0],betas[-1]) for b in betas]
     integrand = []
     for i,x in enumerate(xs):
@@ -24,7 +24,7 @@ def integrateXsTrapezoid(betas,rho,t):
         integrand.append(rho[i]/(b*np.tanh(b*0.5))*np.cos(b*t)*integrationThing)
     return (np.trapz(integrand,x=xs))
 
-def integrateXsGaussLegendre(betas,rho,t,N):
+def integrate_F_XsGaussLegendre(betas,rho,t,N):
     xs = [getX(b,-1,1,betas[0],betas[-1]) for b in betas]
     integrationVal = 0.0
     points,weights = np.polynomial.legendre.leggauss(N)
@@ -38,11 +38,13 @@ def integrateXsGaussLegendre(betas,rho,t,N):
     return integrationVal
 
 
-def getSmallContrib(betas,rho,t):
-    c = rho[1]/(betas[0]*betas[0])
-    return 2.0*c*betas[0] + (c/18.0 + c*t*t/3.0)*betas[0]**3 - (c*t*t/60)*betas[0]**5
+def getSmallContrib(beta1,rho1,t):
+    c = rho1/(beta1*beta1)
+    return 2.0*c*beta1 + (c/18.0 + c*t*t/3.0)*beta1**3 - (c*t*t/60.0)*beta1**5
 
 
+def getF(betas,rho,t,N):
+    return integrate_F_XsGaussLegendre(betas,rho,t,N) 
 
 if __name__=='__main__':
 
@@ -54,24 +56,24 @@ if __name__=='__main__':
     t = 1.0
 
     print("\nintegrating b1->bmax db'")
-    print(integrateBetasTrapezoid(betas[1:],rho,t))
+    print(integrate_F_BetasTrapezoid(betas[1:],rho,t))
     
     print("\nintegrating -1->1 dx")
-    print(integrateXsTrapezoid(betas[1:],rho,t))
-    x1 = integrateXsTrapezoid(betas[1:],rho,t)
+    print(integrate_F_XsTrapezoid(betas[1:],rho,t))
+    x1 = integrate_F_XsTrapezoid(betas[1:],rho,t)
     
     print("\nintegrating with gauss-legendre")
-    print(integrateXsGaussLegendre(betas[1:],rho,t,100))
+    print(integrate_F_XsGaussLegendre(betas[1:],rho,t,100))
     toPrint = False
     if toPrint:
-        integrationVals = [integrateXsGaussLegendre(betas,rho,t,N) for N in [1,5,10,20,50,100,500,1000]]
+        integrationVals = [integrate_F_XsGaussLegendre(betas,rho,t,N) for N in [1,5,10,20,50,100,500,1000]]
         plt.plot(integrationVals)
-        x1 = integrateXsTrapezoid(betas,rho,t)
+        x1 = integrate_F_XsTrapezoid(betas,rho,t)
         plt.plot([x1 for i in range(len(integrationVals))])
         plt.show()
 
     print("\nsmall contribution")
-    print(getSmallContrib(betas,rho,t))
+    print(getSmallContrib(betas[1],rho[1],t))
 
 
 

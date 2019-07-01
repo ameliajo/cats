@@ -10,7 +10,7 @@ def getB(x,xMin,xMax,bMin,bMax):
     return (x-xMin)/(xMax-xMin) * (bMax-bMin) + bMin
 
 
-def integrateBetasTrapezoid(betas,rho,t):
+def integrate_G_BetasTrapezoid(betas,rho,t):
     integrand = []
     for i,b in enumerate(betas):
         if b > 0.0: integrand.append(rho[i]*np.sin(b*t)/b)
@@ -18,7 +18,7 @@ def integrateBetasTrapezoid(betas,rho,t):
     return np.trapz(integrand,x=betas)
 
 
-def integrateXsTrapezoid(betas,rho,t):
+def integrate_G_XsTrapezoid(betas,rho,t):
     xs = [getX(b,-1,1,betas[0],betas[-1]) for b in betas]
     integrand = []
     for i,x in enumerate(xs):
@@ -30,7 +30,7 @@ def integrateXsTrapezoid(betas,rho,t):
             integrand.append(rho[i]/integrationThing)
     return np.trapz(integrand,x=xs)
 
-def integrateXsGaussLegendre(betas,rho,t,N):
+def integrate_G_XsGaussLegendre(betas,rho,t,N):
     xs = [getX(b,-1,1,betas[0],betas[-1]) for b in betas]
     integrationVal = 0.0
     points,weights = np.polynomial.legendre.leggauss(N)
@@ -47,7 +47,8 @@ def integrateXsGaussLegendre(betas,rho,t,N):
     return integrationVal
 
 
-
+def getG(betas,rho,t,N):
+    return integrate_G_XsGaussLegendre(betas,rho,t,N)
 
 if __name__=='__main__':
 
@@ -58,20 +59,20 @@ if __name__=='__main__':
     t = 1.0
 
     print("\nintegrating b1->bmax db'")
-    print(integrateBetasTrapezoid(betas,rho,t))
+    print(integrate_G_BetasTrapezoid(betas,rho,t))
 
     print("\nintegrating -1->1 dx")
-    print(integrateXsTrapezoid(betas,rho,t))
+    print(integrate_G_XsTrapezoid(betas,rho,t))
 
     print("\nintegrating with gauss-legendre")
-    print(integrateXsGaussLegendre(betas,rho,t,100))
+    print(integrate_G_XsGaussLegendre(betas,rho,t,100))
     print()
 
     toPrint = False
     if toPrint:
-        integrationVals = [integrateXsGaussLegendre(betas,rho,t,N) for N in [1,5,10,20,50,100,500,1000]]
+        integrationVals = [integrate_G_XsGaussLegendre(betas,rho,t,N) for N in [1,5,10,20,50,100,500,1000]]
         plt.plot(integrationVals)
-        x1 = integrateXsTrapezoid(betas,rho,t)
+        x1 = integrate_G_XsTrapezoid(betas,rho,t)
         plt.plot([x1 for i in range(len(integrationVals))])
         plt.show()
 
