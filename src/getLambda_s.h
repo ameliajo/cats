@@ -2,69 +2,52 @@
 #include <boost/math/quadrature/gauss.hpp>
 
 
-
 template <typename Range, typename Float>
 auto getValue(Range betas, Range rho, Float t){
   for (size_t i = 0; i < betas.size()-1; ++i){
     if (betas[i] <= t <= betas[i+1]){
-      auto m = (rho[i+1]-rho[i])/(betas[i+1]-betas[i]);
-      return m*(t-betas[i])+rho[i];
+      return (rho[i+1]-rho[i])/(betas[i+1]-betas[i])*(t-betas[i])+rho[i];
     }
   }
   return 0.0;
 }
 
-
-
 template <typename Range>
 void normalizeRho(const Range& betas, Range& rho){
-  double integral = 0.0;
-  for (size_t i = 0; i < rho.size()-1; ++i){
-    integral += (rho[i]+rho[i+1])*0.5*(betas[i+1]-betas[i]);
-  }
-
   using namespace boost::math::quadrature;
-  auto f = [betas,rho](const double& t) { return getValue(betas,rho,t); };
-  double Q = gauss<double, 10>::integrate(f, 0.0, betas[betas.size()-1]);
-  std::cout << integral<< std::endl;
-  std::cout << Q<< std::endl;
-
-
-
-  //double invArea = 1.0/integral;
-  //for (auto& x : rho){
-  //  x *= invArea;
-  //}
-
-}
-
-auto quick(){
-  using namespace boost::math::quadrature;
-  auto f = [](const double& t) { return t * t * std::atan(t); };
-  double Q = gauss<double, 7>::integrate(f, 0, 1);
-  std::cout << Q<< std::endl;
-
+  auto f = [betas,rho](const double& beta) { return getValue(betas,rho,beta); };
+  double invArea = 1.0/gauss<double,10>::integrate(f,0.0,betas[betas.size()-1]);
+  std::cout << 1.0/invArea << std::endl;
+  for (auto& x : rho){ x *= invArea; }
 }
 
 template <typename Range>
 auto getLambda_s(Range betas, Range rho){
-  using std::sinh;
-  using std::cosh;
+  using std::sinh; using std::cosh; using std::exp;
   normalizeRho(betas, rho);
-  return;
 
-  auto c = rho[1]/(betas[1]*betas[1]);
-  double integration = c*sinh(betas[1]*0.5);
+  //std::vector<double> P (rho.size());
+  //for (size_t i = 1; i < rho.size(); ++i){
+  //  P[i] = rho[i]/(2.0*betas[i]*sinh(betas[i]*0.5));
+  //}
+  //P[0] = rho[1]/(betas[1]*betas[1]);
+  //std::cout << std::endl;
+  //for ( auto x : rho){ std::cout << x << " ";}
+  //std::cout << std::endl;
+  //std::cout << std::endl;
+  //for ( auto x : P){ std::cout << x << " ";}
+  //std::cout << std::endl;
 
-  for (size_t i = 1; i < betas.size()-1; ++i){
-    auto l = rho[i]/betas[i] * cosh(betas[i]*0.5) / sinh(betas[i]*0.5);
-    auto r = rho[i+1]/betas[i+1] * cosh(betas[i+1]*0.5) / sinh(betas[i+1]*0.5);
-    integration = integration + (betas[i+1]-betas[i])*0.5*(l+r);
-  }
+  using namespace boost::math::quadrature;
+  auto integrand = [betas,rho](const double& beta) { 
+    auto rhoVal = getValue(betas,rho,std::abs(beta));
+    return (rhoVal/beta)*cosh(beta*0.5)/sinh(beta*0.5);
+  };
 
-  quick();
+  auto lambda_s = gauss<double,10>::integrate(integrand,0.0,betas[betas.size()-1]);
 
-  //std::cout << integration << std::endl;
+  return lambda_s;
+
 
 
 }
