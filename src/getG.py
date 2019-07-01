@@ -2,9 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from testRho import *
 
-bMin=0.1
-bMax=10.0
-
 xMin=-1.0
 xMax= 1.0
 
@@ -17,23 +14,34 @@ def getB(x,xMin,xMax,bMin,bMax):
 
 kbT = 0.025
 
-bs = [x/kbT for x in energies[1:]]
-bMin, bMax = bs[0], bs[-1]
+bs = [x/kbT for x in energies[:]]
+bMin, bMax = 0.0, bs[-1]
 xs = [getX(b,xMin,xMax,bMin,bMax) for b in bs]
 
 t = 1.0
 
+
 integrand = []
 for i,b in enumerate(bs):
-    integrand.append(rho[i]/(b*np.tanh(b*0.5))*np.cos(b*t))
+    if b > 0.0:
+        integrand.append(rho[i]*np.sin(b*t)/b)
+    else:
+        integrand.append(rho[i])
+
+print("\nintegrating b1->bmax db'")
 print(np.trapz(integrand,x=bs))
+
 
 
 integrand = []
 for i,x in enumerate(xs):
     b = getB(x,xMin,xMax,bMin,bMax)
     integrationThing = (bMax-bMin)/(xMax-xMin)
-    integrand.append(rho[i]/(b*np.tanh(b*0.5))*np.cos(b*t)*integrationThing)
+    if b > 0.0:
+        integrand.append(rho[i]*np.sin(b*t)/b*integrationThing)
+    else:
+        integrand.append(rho[i]/integrationThing)
+print("\nintegrating -1->1 dx")
 print(np.trapz(integrand,x=xs))
 x1 = (np.trapz(integrand,x=xs))
 
@@ -48,13 +56,17 @@ for N in [1,5,10,20,50,100,500,1000]:
         b = getB(x,xMin,xMax,bMin,bMax)
         integrationThing = (bMax-bMin)/(xMax-xMin)
         rhoVal = getVal(xs,x,rho)
-        integrationVal += (w*rhoVal/(b*np.tanh(b*0.5))*np.cos(b*t)*integrationThing)
+        if b > 1e-6:
+            integrationVal += (w*rhoVal/b*np.sin(b*t)*integrationThing)
+        else:
+            integrationVal += (w*rhoVal*integrationThing)
     integrationVals.append(integrationVal)
 plt.plot(integrationVals)
 plt.plot([x1 for i in range(len(integrationVals))])
 plt.show()
-
-
+print("\nintegrating with gauss-legendre")
+print(integrationVals[-1])
+print()
 
 
 
