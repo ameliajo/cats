@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from testRho import *
 
-
 def getX(b,xMin,xMax,bMin,bMax):
     return (b-bMin)/(bMax-bMin) * (xMax-xMin) + xMin
 
@@ -10,27 +9,23 @@ def getB(x,xMin,xMax,bMin,bMax):
     return (x-xMin)/(xMax-xMin) * (bMax-bMin) + bMin
 
 
-def integrateBetasTrapezoid(betas,rho,t):
+
+def integrateBetasTrapezoid(betas,rho):
     integrand = []
     for i,b in enumerate(betas):
-        if b > 0.0: integrand.append(rho[i]*np.sin(b*t)/b)
-        else:       integrand.append(rho[i])
+        integrand.append(rho[i]/(b*np.tanh(b*0.5)))
     return np.trapz(integrand,x=betas)
 
-
-def integrateXsTrapezoid(betas,rho,t):
+def integrateXsTrapezoid(betas,rho):
     xs = [getX(b,-1,1,betas[0],betas[-1]) for b in betas]
     integrand = []
     for i,x in enumerate(xs):
         b = getB(x,-1,1,betas[0],betas[-1])
         integrationThing = (betas[-1]-betas[0])/(2.0)
-        if b > 0.0:
-            integrand.append(rho[i]*np.sin(b*t)/b*integrationThing)
-        else:
-            integrand.append(rho[i]/integrationThing)
-    return np.trapz(integrand,x=xs)
+        integrand.append(rho[i]/(b*np.tanh(b*0.5))*integrationThing)
+    return (np.trapz(integrand,x=xs))
 
-def integrateXsGaussLegendre(betas,rho,t,N):
+def integrateXsGaussLegendre(betas,rho,N):
     xs = [getX(b,-1,1,betas[0],betas[-1]) for b in betas]
     integrationVal = 0.0
     points,weights = np.polynomial.legendre.leggauss(N)
@@ -40,12 +35,13 @@ def integrateXsGaussLegendre(betas,rho,t,N):
         b = getB(x,-1,1,betas[0],betas[-1])
         integrationThing = (betas[-1]-betas[0])/(2.0)
         rhoVal = getVal(xs,x,rho)
-        if b > 1e-6:
-            integrationVal += (w*rhoVal/b*np.sin(b*t)*integrationThing)
-        else:
-            integrationVal += (w*rhoVal*integrationThing)
+        integrationVal += (w*rhoVal/(b*np.tanh(b*0.5))*integrationThing)
     return integrationVal
 
+
+def getSmallContrib(betas,rho):
+    c = rho[1]/(betas[0]*betas[0])
+    return 2.0*c*betas[0] + c*betas[0]**3/18.0 
 
 
 
@@ -55,18 +51,17 @@ if __name__=='__main__':
     betas = [x/kbT for x in energies[:]]
     invArea = 1.0/np.trapz(rho,x=betas)
     rho = [invArea*x for x in rho]
-    t = 1.0
 
     print("\nintegrating b1->bmax db'")
-    print(integrateBetasTrapezoid(betas,rho,t))
-
+    print(integrateBetasTrapezoid(betas[1:],rho))
+    
+    """ 
     print("\nintegrating -1->1 dx")
     print(integrateXsTrapezoid(betas,rho,t))
-
+    x1 = integrateXsTrapezoid(betas,rho,t)
+    
     print("\nintegrating with gauss-legendre")
     print(integrateXsGaussLegendre(betas,rho,t,100))
-    print()
-
     toPrint = False
     if toPrint:
         integrationVals = [integrateXsGaussLegendre(betas,rho,t,N) for N in [1,5,10,20,50,100,500,1000]]
@@ -74,6 +69,16 @@ if __name__=='__main__':
         x1 = integrateXsTrapezoid(betas,rho,t)
         plt.plot([x1 for i in range(len(integrationVals))])
         plt.show()
+
+    print("\nsmall contribution")
+    print(getSmallContrib(betas,rho,t))
+    """ 
+
+
+
+
+
+
 
 
 
