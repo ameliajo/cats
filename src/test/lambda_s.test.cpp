@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "getLambda_s.h"
 
+/*
 TEST_CASE( "" ){
   GIVEN( "" ){ 
     REQUIRE( true );
@@ -14,10 +15,11 @@ TEST_CASE( "" ){
     //std::cout << std::endl;
 
 
-    std::cout << std::endl;
+    //std::cout << std::endl;
     auto lambda_s = getLambda_s(betas,rho);
     //std::cout << lambda_s << std::endl;
-    std::cout << std::endl;
+    //std::cout << std::endl;
 
   } // GIVEN
 } // TEST CASE
+*/
