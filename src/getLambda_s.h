@@ -16,7 +16,7 @@ template <typename Range>
 void normalizeRho(const Range& betas, Range& rho){
   using namespace boost::math::quadrature;
   auto f = [betas,rho](const double& beta) { return getValue(betas,rho,beta); };
-  double invArea = 1.0/gauss<double,10>::integrate(f,0.0,betas[betas.size()-1]);
+  double invArea = 1.0/(gauss<double,10>::integrate(f,0.0,betas[betas.size()-1]));
   std::cout << 1.0/invArea << std::endl;
   for (auto& x : rho){ x *= invArea; }
 }

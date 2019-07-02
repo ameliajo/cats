@@ -1,6 +1,7 @@
 
 add_executable( cats.test
                 cats.test.cpp
+                normalize.test.cpp
                 lambda_s.test.cpp )
 target_compile_options( cats.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
