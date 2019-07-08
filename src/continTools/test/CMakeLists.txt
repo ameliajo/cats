@@ -1,8 +1,6 @@
 
-add_executable( cats.test
-                cats.test.cpp
-                lambda_s.test.cpp )
-target_compile_options( cats.test PRIVATE ${${PREFIX}_common_flags}
+add_executable( continTools.test get_F_G.test.cpp )
+target_compile_options( continTools.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}
 $<$<BOOL:${coverage}>:${${PREFIX}_coverage_flags}>>
@@ -12,5 +10,5 @@ $<$<BOOL:${link_time_optimization}>:${${PREFIX}_link_time_optimization_flags}>
 $<$<BOOL:${nonportable_optimization}>:${${PREFIX}_nonportable_optimization_flags}>>
 
 ${CXX_appended_flags} ${cats_appended_flags} )
-target_link_libraries( cats.test PUBLIC cats ) 
-add_test( NAME cats COMMAND cats.test )
+target_link_libraries( continTools.test PUBLIC cats ) 
+add_test( NAME continTools COMMAND continTools.test )

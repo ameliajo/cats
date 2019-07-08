@@ -1,5 +1,6 @@
+#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "getF.h"
+#include "continTools/get_F_G.h"
 
 TEST_CASE( "Get F (quadrature)"){
   double kb = 8.6173332e-5, T;
@@ -15,9 +16,13 @@ TEST_CASE( "Get F (quadrature)"){
     T = 296.0;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.00255/(kb*T); }
 
+    std::cout << std::endl;
     for (size_t i = 0; i < 10; ++i){
-      std::cout << getF(rho,betas,0.8,double(i*1e-3)) << std::endl;
+      std::cout << getF(rho,betas,double(i+1)*1e-3,true) << "    ";
+      std::cout << getG(rho,betas,double(i+1)*1e-3,true) << std::endl;
+      break;
     }
+    std::cout << std::endl;
 
     /*
     T = 296.0;

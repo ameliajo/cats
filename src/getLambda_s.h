@@ -1,6 +1,11 @@
 #include <iostream>
 #include <boost/math/quadrature/gauss.hpp>
+#include "generalTools/trapezoid.h"
+#include "generalTools/interpolate.h"
+#include "generalTools/normalize.h"
 
+
+/*
 template <typename Range, typename Float>
 auto interpolate(Range betas, Range rho, Float t){
   for (size_t i = 0; i < betas.size()-1; ++i){
@@ -32,6 +37,7 @@ void normalizeRho(const Range& betas, Range& rho, bool useOld){
 }
 
 
+*/
 
 
 template <typename Range>
