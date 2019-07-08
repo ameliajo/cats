@@ -1,5 +1,5 @@
-//#ifndef CATS_TRAPZ
-//#define CATS_TRAPZ
+#ifndef CATS_TRAPZ
+#define CATS_TRAPZ
 
 template <typename Range,typename Function>
 auto trapz(Range x, Function func){
@@ -10,4 +10,4 @@ auto trapz(Range x, Function func){
   return integral;
 }
 
-//#endif
+#endif

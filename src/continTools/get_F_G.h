@@ -2,6 +2,8 @@
 #include <boost/math/quadrature/gauss.hpp>
 #include "getLambda_s.h"
 
+#ifndef CATS_CONTIN_GET_F
+#define CATS_CONTIN_GET_F
 template <typename Range, typename Float>
 auto getF(Range rho, Range betas, Float t, bool useTrapz=false){
   using std::sinh; using std::cosh; using std::exp;
@@ -62,9 +64,6 @@ auto getG(Range rho, Range betas, Float t, bool useTrapz=false){
                              : -gauss<double,10>::integrate(func1,betas[1],betas[betas.size()-1]);
   return smallPart + largePart;
 
-
-
-
-
 }
 
+#endif
