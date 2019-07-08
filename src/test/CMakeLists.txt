@@ -1,5 +1,6 @@
 
 add_executable( cats.test
+                getF.test.cpp
                 cats.test.cpp
                 normalize.test.cpp
                 lambda_s.test.cpp )
