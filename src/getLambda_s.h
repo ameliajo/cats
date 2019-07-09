@@ -8,8 +8,10 @@
 
 template <typename Range>
 auto getLambda_s(Range betas, Range rho, bool useOld=false){
+
   using std::sinh; using std::cosh; using std::exp;
   using namespace boost::math::quadrature;
+
   normalizeRho(betas, rho, useOld);
 
   auto f1 = [betas,rho](int i) { 
@@ -24,8 +26,10 @@ auto getLambda_s(Range betas, Range rho, bool useOld=false){
     return P*2.0*cosh(beta*0.5);
   };
 
+  std::cout << trapz(betas,f1)<<std::endl;
+  std::cout << gauss<double,100>::integrate(f2,0.0,betas[betas.size()-1]) <<std::endl;
   return useOld ? trapz(betas,f1)
-                : gauss<double,10>::integrate(f2,0.0,betas[betas.size()-1]);
+                : gauss<double,100>::integrate(f2,0.0,betas[betas.size()-1]);
 
 }
 

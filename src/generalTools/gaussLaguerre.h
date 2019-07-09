@@ -312,21 +312,10 @@ double class_matrix ( int kind, int m, double alpha, double beta, double aj[],
 //    Output, double CLASS_MATRIX, the zero-th moment.
 //
 {
-  double a2b2;
-  double ab;
-  double aba;
-  double abi;
-  double abj;
-  double abti;
-  double apone;
   int i;
-  double temp = 2.220446049250313E-016;
-  double temp2 = 0.5;
-  double zemu=0.0;
-
-
+  double a2b2, ab, aba, abi, abj, abti, apone, temp = 2.220446049250313E-016, 
+         temp2 = 0.5, zemu=0.0;
   parchk ( kind, 2 * m - 1, alpha, beta );
-
 
   if (500.0 * temp < fabs ( pow ( tgamma ( temp2 ), 2 ) - M_PI )){
     cout << "\n" << "CLASS_MATRIX - Fatal error!\n" 
@@ -491,17 +480,14 @@ void imtqlx ( int n, double d[], double e[], double z[] )
   double b, c, f, g, p, prec, r, s;
 
   prec = 2.220446049250313E-016;
-
   if ( n == 1 ){ return; }
-
   e[n-1] = 0.0;
 
   for ( l = 1; l <= n; l++ ) {
     j = 0;
     for ( ; ; ) {
       for ( m = l; m <= n; m++ ) {
-        if ( m == n ) { break; }
-        if (fabs (e[m-1]) <= prec * (fabs(d[m-1]) + fabs(d[m]))) { break; }
+        if (m == n or (fabs(e[m-1]) <= prec*(fabs(d[m-1])+fabs(d[m])))) {break;}
       }
       p = d[l-1];
       if ( m == l ) { break; }
@@ -551,7 +537,7 @@ void imtqlx ( int n, double d[], double e[], double z[] )
       e[m-1] = 0.0;
     }
   }
-//  Sorting.
+  //  Sorting.
   for ( ii = 2; ii <= m; ii++ ) {
     i = ii - 1;
     k = i;
@@ -623,51 +609,34 @@ void parchk ( int kind, int m, double alpha, double beta )
 //    by the value of KIND.
 //
 {
-  double tmp;
-
-  if ( kind <= 0 )
-  {
-    cout << "\n";
-    cout << "PARCHK - Fatal error!\n";
-    cout << "  KIND <= 0.\n";
+  if ( kind <= 0 ) {
+    cout << "\n" << "PARCHK - Fatal error!\n" << "  KIND <= 0.\n";
     exit ( 1 );
   }
-//
-//  Check ALPHA for Gegenbauer, Jacobi, Laguerre, Hermite, Exponential.
-//
+  //  Check ALPHA for Gegenbauer, Jacobi, Laguerre, Hermite, Exponential.
   if ( 3 <= kind && alpha <= -1.0 ) {
     cout << "\n" << "PARCHK - Fatal error!\n" 
          << "  3 <= KIND and ALPHA <= -1.\n";
     exit ( 1 );
   }
-//
-//  Check BETA for Jacobi.
-//
+  //  Check BETA for Jacobi.
   if ( kind == 4 && beta <= -1.0 ) {
     cout << "\n" << "PARCHK - Fatal error!\n" << "  KIND == 4 and BETA <= -1.0.\n";
     exit ( 1 );
   }
-//
-//  Check ALPHA and BETA for rational.
-//
-  if ( kind == 8 )
-  {
-    tmp = alpha + beta + m + 1.0;
-    if ( 0.0 <= tmp || tmp <= beta ) {
+  //  Check ALPHA and BETA for rational.
+  if ( kind == 8 ) {
+    if ( 0.0 <= alpha + beta + m + 1.0 || alpha + beta + m + 1.0 <= beta ) {
       cout << "\n" << "PARCHK - Fatal error!\n" 
            << "  KIND == 8 but condition on ALPHA and BETA fails.\n";
       exit ( 1 );
     }
   }
-  return;
 }
 //****************************************************************************80
 
 
-
-double r8_sign ( double x ){
-  return x < 0.0 ? -1.0 : 1.0;
-}
+double r8_sign ( double x ){ return x < 0.0 ? -1.0 : 1.0; }
 
 
 void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[], 
@@ -745,14 +714,13 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
 //
 {
   int i, k, l;
-  double p, shft, slp, temp, tmp, al, be=0.0;
+  double p, shft, slp, temp, al, be=0.0;
 
   temp = 2.220446049250313E-016;
 
   parchk ( kind, 1, alpha, beta );
 
-  if ( kind == 1 )
-  {
+  if ( kind == 1 ){
     al = 0.0;
     be = 0.0;
     if ( fabs ( b - a ) <= temp ) {
@@ -762,8 +730,7 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
     shft = ( a + b ) / 2.0;
     slp = ( b - a ) / 2.0;
   }
-  else if ( kind == 2 )
-  {
+  else if ( kind == 2 ) {
     al = -0.5;
     be = -0.5;
     if ( fabs ( b - a ) <= temp ) {
@@ -773,8 +740,7 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
     shft = ( a + b ) / 2.0;
     slp = ( b - a ) / 2.0;
   }
-  else if ( kind == 3 )
-  {
+  else if ( kind == 3 ) {
     al = alpha;
     be = alpha;
     if ( fabs ( b - a ) <= temp ) {
@@ -784,8 +750,7 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
     shft = ( a + b ) / 2.0;
     slp = ( b - a ) / 2.0;
   }
-  else if ( kind == 4 )
-  {
+  else if ( kind == 4 ) {
     al = alpha;
     be = beta;
 
@@ -796,13 +761,9 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
     shft = ( a + b ) * 0.5;
     slp  = ( b - a ) * 0.5;
   }
-  else if ( kind == 5 )
-  {
-    if ( b <= 0.0 )
-    {
-      cout << "\n";
-      cout << "SCQF - Fatal error!\n";
-      cout << "  B <= 0\n";
+  else if ( kind == 5 ) {
+    if ( b <= 0.0 ) {
+      cout << "\n" << "SCQF - Fatal error!\n" << "  B <= 0\n";
       exit ( 1 );
     }
     shft = a;
@@ -810,8 +771,7 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
     al = alpha;
     be = 0.0;
   }
-  else if ( kind == 6 )
-  {
+  else if ( kind == 6 ) {
     if ( b <= 0.0 ) {
       cout << "\n" << "SCQF - Fatal error!\n" << "  B <= 0.\n";
       exit ( 1 );
@@ -821,8 +781,7 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
     al = alpha;
     be = 0.0;
   }
-  else if ( kind == 7 )
-  {
+  else if ( kind == 7 ) {
     al = alpha;
     be = 0.0;
     if ( fabs ( b - a ) <= temp ) {
@@ -860,7 +819,7 @@ void scqf ( int nt, double t[], int mlt[], double wts[], int ndx[],
     l = abs ( ndx[k] );
 
     if ( l != 0 ) {
-      tmp = p;
+      double tmp = p;
       for ( i = l - 1; i <= l - 1 + mlt[k] - 1; i++ ) {
         swts[i] = wts[i] * tmp;
         tmp = tmp * slp;
@@ -928,14 +887,13 @@ void sgqf ( int nt, double aj[], double bj[], double zemu, double t[],
     cout << "\n"<< "SGQF - Fatal error!\n" << "  ZEMU <= 0.\n";
     exit ( 1 );
   }
-  int i;
   //  Set up vectors for IMTQLX.
-  for ( i = 0; i < nt; i++ ) { t[i] = aj[i]; }
+  for ( int i = 0; i < nt; i++ ) { t[i] = aj[i]; }
   wts[0] = sqrt ( zemu );
-  for ( i = 1; i < nt; i++ ) { wts[i] = 0.0; }
+  for ( int i = 1; i < nt; i++ ) { wts[i] = 0.0; }
   //  Diagonalize the Jacobi matrix.
   imtqlx ( nt, t, bj, wts );
 
-  for ( i = 0; i < nt; i++ ) { wts[i] = wts[i] * wts[i]; }
+  for ( int i = 0; i < nt; i++ ) { wts[i] = wts[i] * wts[i]; }
 }
 
