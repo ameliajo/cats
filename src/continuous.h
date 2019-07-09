@@ -16,8 +16,8 @@ auto getSab(Range betas, Range rho, Float alpha, Float beta){
     return exp(alpha*F)*cos(beta*t-alpha*G);
   };
 
-  auto f1 = [](auto x){return 3*x;};
-  std::cout << boost::math::quadrature::gauss<double,10>::integrate(f1,0.0,10.0) << std::endl;
+  //auto f1 = [](auto x){return 3*x;};
+  std::cout << boost::math::quadrature::gauss<double,10>::integrate(integrand,0.0,10.0) << std::endl;
 
   return;
   
