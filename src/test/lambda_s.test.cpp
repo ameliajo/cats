@@ -1,31 +1,24 @@
 #include "catch.hpp"
 #include "getLambda_s.h"
 
+/*
 TEST_CASE( "Debye waller factor, lambda_s (trapezoid integral)" ){
   double kb = 8.6173332e-5, T;
   GIVEN( "simple toy problem" ){ 
+    {
     std::vector<double> rho   { 0., 1., 1., 2., 3., 5., 3., 2., 1., 1., 0. },
-                        betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. };
-    //double lambda_s = getLambda_s(betas,rho,true);
-    //REQUIRE( 26.606323014584166 == Approx(lambda_s).epsilon(1e-6) );
-    //std::cout << getLambda_s(betas,rho,true) << std::endl;
-    //std::cout << getLambda_s(betas,rho,false) << std::endl;
-  } // GIVEN
-  GIVEN( "simple toy problem" ){ 
+                        betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. }; 
+    REQUIRE(26.606323014 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6));
+    } {
     std::vector<double> rho (11), 
                         betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. };
     for ( size_t i = 0; i < 11; ++i ){ rho[i] = -betas[i]*betas[i]+betas[i]; }
-    for ( size_t i = 0; i < 11; ++i ){ std::cout << rho[i] << "  "; }
-    std::cout << std::endl;
-    double lambda_s = getLambda_s(betas,rho,true);
-    //REQUIRE( 26.606323014584166 == Approx(lambda_s).epsilon(1e-6) );
-    //std::cout << getLambda_s(betas,rho,true) << std::endl;
-    //std::cout << getLambda_s(betas,rho,false) << std::endl;
+    REQUIRE(29.001826808 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6));
+    }
   } // GIVEN
 
 
 
-/*
   GIVEN( "simple H2O phonon distribution and its corresponding beta grid" ){ 
     std::vector<double> rho {0, .0005, .001, .002, .0035, .005, .0075, .01, 
       .013, .0165, .02, .0245, .029, .034, .0395, .045, .0506, .0562, .0622, 
@@ -143,11 +136,27 @@ TEST_CASE( "Debye waller factor, lambda_s (trapezoid integral)" ){
 
   } // GIVEN
 
-*/
 } // TEST CASE
+*/
 
 TEST_CASE( "Debye waller factor, lambda_s (quadrature)" ){
   double kb = 8.6173332e-5, T;
+
+  GIVEN( "simple toy problem" ){ 
+    {
+    std::vector<double> rho   { 0., 1., 1., 2., 3., 5., 3., 2., 1., 1., 0. },
+                        betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. }; 
+    REQUIRE(26.7119214020 == Approx(getLambda_s(betas,rho,false)).epsilon(1e6));
+    //std::cout << getLambda_s(betas,rho,false) << std::endl;
+    } {
+    std::vector<double> rho (11), 
+                        betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. };
+    for ( size_t i = 0; i < 11; ++i ){ rho[i] = -betas[i]*betas[i]+betas[i]; }
+    //REQUIRE(26.013617006 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
+    }
+  } // GIVEN
+
+
   GIVEN( "simple H2O phonon distribution and its corresponding beta grid" ){ 
     std::vector<double> rho {0, .0005, .001, .002, .0035, .005, .0075, .01, 
       .013, .0165, .02, .0245, .029, .034, .0395, .045, .0506, .0562, .0622, 
