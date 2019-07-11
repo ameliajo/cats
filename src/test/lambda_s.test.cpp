@@ -1,20 +1,24 @@
 #include "catch.hpp"
 #include "getLambda_s.h"
 
-/*
 TEST_CASE( "Debye waller factor, lambda_s (trapezoid integral)" ){
   double kb = 8.6173332e-5, T;
+  std::vector<double> rho(11), betas(11);
   GIVEN( "simple toy problem" ){ 
-    {
-    std::vector<double> rho   { 0., 1., 1., 2., 3., 5., 3., 2., 1., 1., 0. },
-                        betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. }; 
+    { 
+    rho = { 0., 1., 1., 2., 3., 5., 3., 2., 1., 1., 0. },
+    betas = { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. }; 
     REQUIRE(26.606323014 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6));
     } {
-    std::vector<double> rho (11), 
-                        betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. };
-    for ( size_t i = 0; i < 11; ++i ){ rho[i] = -betas[i]*betas[i]+betas[i]; }
+    betas = { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. };
+    for (size_t i = 0; i < rho.size(); ++i){rho[i] = -betas[i]*betas[i]+betas[i];}
     REQUIRE(29.001826808 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6));
+    } {
+    rho   = {0., 2., 4., 6., 8., 9., 7., 5., 3., 1., 0.},
+    betas = {0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.};
+    REQUIRE(26.309814252 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6));
     }
+
   } // GIVEN
 
 
@@ -31,13 +35,11 @@ TEST_CASE( "Debye waller factor, lambda_s (trapezoid integral)" ){
 
     T = 296.0;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.00255/(kb*T); }
-    auto lambda_s = getLambda_s(betas,rho,true);
-    REQUIRE( 0.52920997122117586 == Approx(lambda_s).epsilon(1e-6) );
+    REQUIRE(0.529209971 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6));
 
     T = 600.0;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.00255/(kb*T); }
-    lambda_s = getLambda_s(betas,rho,true);
-    REQUIRE( 1.760282876 == Approx(lambda_s).epsilon(1e-6) );
+    REQUIRE(1.760282876 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6));
 
   } // GIVEN
 
@@ -137,22 +139,24 @@ TEST_CASE( "Debye waller factor, lambda_s (trapezoid integral)" ){
   } // GIVEN
 
 } // TEST CASE
-*/
 
 TEST_CASE( "Debye waller factor, lambda_s (quadrature)" ){
   double kb = 8.6173332e-5, T;
 
-  GIVEN( "simple toy problem" ){ 
+  GIVEN( "simple toy problems" ){ 
     {
     std::vector<double> rho   { 0., 1., 1., 2., 3., 5., 3., 2., 1., 1., 0. },
                         betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. }; 
-    REQUIRE(26.7119214020 == Approx(getLambda_s(betas,rho,false)).epsilon(1e6));
-    //std::cout << getLambda_s(betas,rho,false) << std::endl;
+    REQUIRE(26.7119214020 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
     } {
     std::vector<double> rho (11), 
                         betas { 0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1. };
     for ( size_t i = 0; i < 11; ++i ){ rho[i] = -betas[i]*betas[i]+betas[i]; }
-    //REQUIRE(26.013617006 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
+    REQUIRE(29.600753381 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
+    } {
+      std::vector<double> rho {0., 2., 4., 6., 8., 9., 7., 5., 3., 1., 0.},
+                        betas {0., .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.};
+    REQUIRE(26.806452850 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
     }
   } // GIVEN
 
@@ -167,17 +171,13 @@ TEST_CASE( "Debye waller factor, lambda_s (quadrature)" ){
       .04706, .0459, .04478, .04366, .04288, .04244, .042, 0.};
     std::vector<double> betas (rho.size());
 
-    /*
     T = 296.0;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.00255/(kb*T); }
-    auto lambda_s = getLambda_s(betas,rho);
-    REQUIRE( 0.529209971 == Approx(lambda_s).epsilon(1e-1) );
+    REQUIRE( 0.51787093 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6) );
 
     T = 600.0;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.00255/(kb*T); }
-    lambda_s = getLambda_s(betas,rho);
-    REQUIRE( 1.760282876 == Approx(lambda_s).epsilon(1e-1) );
-    */
+    REQUIRE( 1.68770116913337 == Approx(getLambda_s(betas,rho)).epsilon(1e-1) );
 
   } // GIVEN
   GIVEN( "Be in BeO phonon distribution and its corresponding beta grid" ){ 
@@ -210,21 +210,18 @@ TEST_CASE( "Debye waller factor, lambda_s (quadrature)" ){
 
     std::vector<double> betas (rho.size());
 
-    /*
     T = 296.3;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.001/(kb*T); }
-    REQUIRE( 0.457453009 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6) );
+    REQUIRE(0.2877332119 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
 
     T = 600.0;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.001/(kb*T); }
-    REQUIRE( 1.451808074 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-6) );
+    REQUIRE(0.9379197488 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
 
     T = 900.0;
     for (size_t i = 0; i < betas.size(); ++i){ betas[i] = i*0.001/(kb*T); }
-    REQUIRE( 3.07133422 == Approx(getLambda_s(betas,rho,true)).epsilon(1e-5) );
+    REQUIRE(1.9981851791 == Approx(getLambda_s(betas,rho,false)).epsilon(1e-6));
 
-
-    */
 
   } // GIVEN
 } // TEST CASE
