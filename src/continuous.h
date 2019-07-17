@@ -8,7 +8,10 @@ auto getSab(Range betas, Range rho, Float alpha, Float beta){
   using std::exp; using std::cos;
   auto lambda_s = getLambda_s(betas,rho,false);
   auto constFactors = exp(-alpha*lambda_s)/M_PI;
-  std::cout << lambda_s << std::endl;
+  std::cout << std::endl;
+  std::cout << constFactors << std::endl;
+  std::cout << "lambda_s = " << lambda_s << std::endl;
+  std::cout << std::endl;
 
   //auto integrand = [rho,betas,alpha,beta](auto t){
   //  Float F = getF(rho,betas,t,true);
@@ -17,15 +20,15 @@ auto getSab(Range betas, Range rho, Float alpha, Float beta){
   //};
   //std::cout << boost::math::quadrature::gauss<double,10>::integrate(integrand,0.0,10.0) << std::endl;
   
-  int N = 100;
-  auto points  = std::get<0>(gaussLaguerre(N,0.0,1.0));
-  auto weights = std::get<1>(gaussLaguerre(N,0.0,1.0));
+  int N = 10;
+  auto points  = std::get<0>(gaussLaguerre(N,0.0,2.0));
+  auto weights = std::get<1>(gaussLaguerre(N,0.0,2.0));
   double contribs = 0.0;
   for (int i = 0; i < N; ++i){
     auto t = points[i];
-    auto F = getF(rho,betas,t,true);
-    auto G = getG(rho,betas,t,true);
-    contribs += weights[i]*constFactors*exp(alpha*F)*cos(beta*t-alpha*G);
+    auto F = getF(rho,betas,t,false);
+    auto G = getG(rho,betas,t,false);
+    contribs += weights[i]*constFactors*exp(alpha*F+t)*cos(beta*t-alpha*G);
   }
   return contribs;
 

@@ -19,16 +19,12 @@ auto getLambda_s(Range betas, Range rho, bool useOld=false){
   for ( size_t i = 1; i < P.size(); ++i ){ 
     P[i] = rho[i]/(2.0*betas[i]*sinh(betas[i]*0.5));
   }
-  //std::cout << P[0] << "  " << P[1] << "  " << P[2] << std::endl;
-  //std::cout << P[3] << "  " << P[4] << "  " << P[5] << std::endl;
-
 
   auto trapzIntegrand   = [betas,P](int i){return P[i]*2.0*cosh(betas[i]*0.5);};
   auto gaussLegendreArg = [betas,P](auto beta){ 
     return exp(-beta*0.5)*interpolate(betas,P,abs(beta)); 
   };
 
-  //std::cout << gauss<double,10>::integrate(gaussLegendreArg,-maxBeta,maxBeta) << std::endl;
   return useOld ? trapz(betas,trapzIntegrand)
                 : gauss<double,10>::integrate(gaussLegendreArg,-maxBeta,maxBeta);
 }
