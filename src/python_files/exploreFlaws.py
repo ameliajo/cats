@@ -27,7 +27,7 @@ original_integrals = []
 thin_integrals = []
 
 t = 62.84985568390593
-t_vec = list(np.linspace(0.0,2*t+2,5000))
+t_vec = list(np.linspace(0.0,20*t+2,1000))
 for i,t in enumerate(t_vec):
     if (i%500==0):
         print(100*i/len(t_vec))
