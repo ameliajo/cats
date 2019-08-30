@@ -2,12 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 from numpy import cos, sin, exp
+from math import pi
 
 
-#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
 # Define and normalize that phonon distribution (two oscillators wit combined 
 # weight of 0.5, with contin weight of 0.5)
-#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
 x = ([6.375E-3, 1.275E-2, 1.9125E-2, 2.55E-2, 3.1875E-2, 3.825E-2, 4.4625E-2, 
       5.1E-2, 5.7375E-2, 6.375E-2, 6.63E-2, 6.885E-2, 7.14E-2, 7.395E-2, 
       7.65E-2, 8.2875E-2, 8.925E-2, 9.5625E-2, 1.02E-1, 1.08375E-1, 1.1475E-1, 
@@ -28,7 +29,7 @@ norm1 = continWgt/(am*integral)
 norm2 = discreWgt/am/((x[31]-x[30])*rho[31]+(x[34]-x[33])*rho[34])
 rho = [x*norm1 for x in rho[:29]] + [x*norm2 for x in rho[29:]]
 
-#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
 
 
 
@@ -40,126 +41,154 @@ time = np.linspace(0.0,total_time,time_steps)
 
 
 T = 0.0255 #temperature in kT
-R, H = np.zeros(len(rho)), np.zeros(len(rho))
+integrand, coth = np.zeros(len(rho)), np.zeros(len(rho))
 for i in range(len(rho)):
-    R[i] = rho[i]/x[i]
-    H[i] = math.cosh(x[i]*0.5/T)/math.sinh(x[i]*0.5/T)
+    coth[i] = math.cosh(x[i]*0.5/T)/math.sinh(x[i]*0.5/T)
+    integrand[i] = rho[i]/x[i]*coth[i]
 
 
-GC = np.zeros(time_steps)
-GS = np.zeros(time_steps)
-
-
-integral = np.trapz(R*H,x)
+integral = np.trapz(integrand,x)
 invF  = 2.0*T/x[0]
-GC[0] = 0.5*rho[0]*(invF+H[0]) + integral
 
-GC2 = np.zeros(time_steps)
-GS2 = np.zeros(time_steps)
+F = np.zeros(time_steps)
+H = np.zeros(time_steps)
+H[0] = 0.5*rho[0]*(invF+coth[0]) + integral
 
 
+
+
+
+
+
+
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
+# Prepare the F and H functions. 
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
 for t in range(1,time_steps):
-    # Do first beta piece
     u = x[0]*time[t]
 
     c  = (1-cos(u))/u           if u >= 0.005 else 0.5*u+u**3/24.0
     s  =    sin(u)              if u >= 0.005 else     u-u**3/6.0
     cs = sin(u)/u**2 - cos(u)/u if u >= 0.005 else u/3.0 - u**3/30.0
 
-    GC2[t] += rho[0]/u*(H[0]*(s-c)+c*invF)
-    GS2[t] += rho[0]*cs
+    F[t] += time[t]*rho[0]*cs
+    H[t] += time[t]*rho[0]/u*(coth[0]*(s-c)+c*invF)
 
-    sm = x[0]*time[t]
-    sinsm = math.sin(sm)
-    cossm = math.cos(sm)
+    sinLast = sin(x[0]*time[t])
+    cosLast = cos(x[0]*time[t])
+
     for i in range(1,len(rho)):
-        s = x[i]*time[t]
-        u = s-sm
-        sins = math.sin(s)
-        coss = math.cos(s)
-        if u<0.005:
-            st = u**2/6.0 - u**4/120.0
-            ct = 0.5*u - u**3/24.0
-        else:
-            sint = sins*cossm-coss*sinsm
-            cost = coss*cossm+sins*sinsm
-            st = 1.0-sint/u
-            ct = (1.0-cost)/u
-        GC[t] += rho[i]/x[i]    *H[i]  *(st*sins +ct*coss ) - \
-                 rho[i-1]/x[i-1]*H[i-1]*(st*sinsm-ct*cossm)
-        GS[t] += R[i]*(ct*sins-st*coss) + \
-                 R[i-1]*(ct*sinsm+st*cossm)
-        sm = s
-        sinsm = sins
-        cossm = coss
-    GC[t] /= time[t]
-    GS[t] /= time[t]
-    
+        sinNext = sin(x[i]*time[t])
+        cosNext = cos(x[i]*time[t])
+
+        theta = x[i]*time[t]-x[i-1]*time[t]
+        st = 1-sin(theta) /theta if theta >= 5e-3 else theta**2/6 - theta**4/120
+        ct =(1-cos(theta))/theta if theta >= 5e-3 else 0.5*theta - theta**3/24
+
+        H[t] += rho[i]/x[i]    *coth[i]  *(st*sinNext + ct*cosNext) - \
+                rho[i-1]/x[i-1]*coth[i-1]*(st*sinLast  - ct*cosLast )
+
+        F[t] += rho[i]  /x[i]  *(ct*sinNext-st*cosNext) + \
+                rho[i-1]/x[i-1]*(ct*sinLast+st*cosLast)
+
+        sinLast = sinNext
+        cosLast = cosNext
+
+    H[t] /= time[t]
+    F[t] /= time[t]
+
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
 
 
-GC = GC + GC2
-GS = GS + GS2
+
+
 
 
 
 
 def gasket(alpha,beta):
-    mbetaT = beta*T #AL in fortran code
+    betaT = beta*T #AL in fortran code
     psq = alpha*am*T  # B in fortran code
-    dbw = math.exp(-psq*GC[0])  
+    dbw = math.exp(-psq*H[0])  
+    #dbw2 = math.exp(-psq*H2[0])  
     #dbwp = dbw/math.pi   #F in fortran code
     S = 0.0
-    sm = time[0]*mbetaT
-    sinsm = math.sin(sm)
-    cossm = math.cos(sm)
-    #ex1 = math.exp(psq*GC[0])
-    #q_last = (math.cos(psq*GS[0])*ex1 -1.0)
-    #r1 = math.sin(psq*GS[0])*ex1
+    sm = time[0]*betaT
+    sinLast = sin(sm)
+    cosLast = cos(sm)
+    #ex1 = math.exp(psq*H[0])
+    #qLast = (math.cos(psq*F[0])*ex1 -1.0)
+    #r1 = math.sin(psq*F[0])*ex1
     ex1 = 1.0
-    q_last = (math.cos(psq*GS[0])*ex1 -dbw)
-    r_last = math.sin(psq*GS[0])*ex1
+    qLast = cos(psq*F[0])*ex1 - dbw
+    rLast = sin(psq*F[0])*ex1
     for t in range(1,time_steps):
-        u = time[t]*mbetaT
-        sins = sin(u)
-        coss = cos(u)
-        ct = (u-sm)*0.5-(u-sm)**3/24.0 if abs(u-sm) < 0.005 else  \
-             (1.0-cos(mbetaT*(time[t]-time[t-1])))/ (u-sm)
-        st = (u-sm)**2/6.0-(u-sm)**4/120.0  if abs((u-sm)) < 0.005 else  \
-              1.0-(sin(time[t]*mbetaT-time[t-1]*mbetaT)) / (u-sm)
+        sinNext = sin(time[t]*betaT)
+        cosNext = cos(time[t]*betaT)
 
-        #ex1 = math.exp(psq*GC[t])
-        #q_this = (math.cos(psq*GS[t])*ex1 -1.0)
-        #r_this = math.sin(psq*GS[t])*ex1
-        ex1 = exp(-psq*(GC[0]-GC[t]))
-        q_this  = cos(psq*GS[t])*ex1 - dbw
-        r_this  = sin(psq*GS[t])*ex1
-        S = S + (cos(psq*GS[t])*ex1 - dbw)*(st*sins+ct*coss) - \
-                 q_last*(st*sinsm-ct*cossm) - \
-                r_this*(ct*sins-st*coss) - \
-                r_last*(st*cossm+ct*sinsm)
-        sm = u
-        sinsm = sins
-        cossm = coss
-        q_last = q_this
-        r_last = r_this
-    #S=S*dbwp/mbetaT
-    return S/(mbetaT*math.pi)
+        theta = time[t]*betaT-time[t-1]*betaT
+
+        st = 1-sin(theta) /theta if theta >= 5e-3 else theta**2/6 - theta**4/120
+        ct =(1-cos(theta))/theta if theta >= 5e-3 else 0.5*theta - theta**3/24
+
+        #ex1 = math.exp(psq*H[t])
+        #qNext = (math.cos(psq*F[t])*ex1 - 1.0)
+        #rNext = math.sin(psq*F[t])*ex1
+        ex1   = exp(-psq*(H[0]-H[t]))
+        qNext = cos(psq*F[t])*ex1 - dbw
+        rNext = sin(psq*F[t])*ex1
+
+        S += qNext*(st*sinNext+ct*cosNext) - qLast*(st*sinLast-ct*cosLast) - \
+             rNext*(ct*sinNext-st*cosNext) - rLast*(st*cosLast+ct*sinLast)
+        sinLast = sinNext
+        cosLast = cosNext
+        qLast = qNext
+        rLast = rNext
+    #S=S*dbwp/betaT
+    return S/(betaT*pi)
 
 
 
 beta = 0.5
 Sasy = gasket(0.5,0.5)
 Ssym = Sasy/math.exp(beta/2.)
-print( \
- abs(gasket(5e-3,5e-3)-0.6616955610028908)/gasket(5e-3,5e-3) < 1e-12 and \
- abs(gasket(0.5,0.5)  -8.286163606448213 )/gasket(0.5, 0.5 ) < 1e-12 and \
- abs(gasket(1.5,1.5)  -1.042763620113287 )/gasket(1.5, 1.5)  < 1e-12 and \
- abs(gasket(3.0,3.0)  -0.1616246706325477)/gasket(3.0, 3.0)  < 1e-12 and \
- abs(gasket(1.0,8.0)  -0.00022785000823275238)/gasket(1.0,8.0) < 1e-11 and \
- abs(gasket(8.0,1.0)  -1.2160162511496266)/gasket(8.0,1.0)     < 1e-12 and \
- abs(gasket(15,15)    -4.677122999348168e-07)/gasket(15,15)    < 1e-8)
 
+x = gasket(5e-3,5e-3)
+if abs(x-0.6616955610028908)/x > 1e-6:
+    print(1,x,0.6616955610028908)
+    exit()
 
+x = gasket(0.5,0.5)
+if abs(x-8.286163606448213)/x> 1e-6:
+    print(2,x,8.286163606448213)
+    exit()
+
+x = gasket(1.5,1.5)
+if abs(x-1.042763620113287 )/x  > 1e-6: 
+    print(3,x,1.042763620113287)
+    exit()
+
+x = gasket(3.0,3.0) 
+if abs(x-0.1616246706325477)/x  > 1e-6:
+    print(4,x,0.1616246706325477)
+    exit()
+
+x = gasket(1.0,8.0)
+if abs(x-0.00022785000823275238)/x > 1e-6:
+    print(5,x,0.00022785000823275238)
+    exit()
+
+x = gasket(8.0,1.0)
+if abs(x-1.2160162511496266)/x > 1e-6:
+    print(6,x,1.2160162511496266)
+    exit()
+
+#x = gasket(15.0,15.0)
+#if abs(x-4.677122999348168e-07)/x > 1e-6:
+#    print(7,x,4.677122999348168e-07)
+#    exit()
+
+print("All good!")
 
 
 """
