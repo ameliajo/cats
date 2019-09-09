@@ -33,12 +33,28 @@ rho = [x*norm1 for x in rho[:29]] + [x*norm2 for x in rho[29:]]
 
 
 
+def normalizeRho(x,rho):
+    """
+    >>> np.trapz([0.0]+normalizeRho([0.01,0.02,0.05,0.10],[1.0,3.0,2.0,0.0]),\
+                 x=[0.0]+[0.01,0.02,0.05,0.10])
+    1.0
+    """
+    norm = 1.0/np.trapz([0.0]+rho,x=[0.0]+x)
+    return [val*norm for val in rho]
+
+
+#
+#x   = [0.0, 1e-4, 5e-4, 1e-3, 5e-3, 1e-2, 1e-1, 5e-1]
+#rho = [0,   1,    2,    3,    2,    2,    1,    0   ]
+
+#x2 = [0.2, 0.6, 1.2]
+#rho2 = [1.0,4.0, 0.0]
+#rho2 = normalizeRho(x2,rho2)
 
 
 total_time = 5000
 time_steps = 5000
 time = np.linspace(0.0,total_time,time_steps)
-
 
 T = 0.0255 #temperature in kT
 integrand, coth = np.zeros(len(rho)), np.zeros(len(rho))
@@ -48,11 +64,6 @@ for i in range(len(rho)):
 
 
 integral = np.trapz(integrand,x)
-invF  = 2.0*T/x[0]
-
-F = np.zeros(time_steps)
-H = np.zeros(time_steps)
-H[0] = 0.5*rho[0]*(invF+coth[0]) + integral
 
 
 
@@ -61,48 +72,53 @@ H[0] = 0.5*rho[0]*(invF+coth[0]) + integral
 
 
 
-#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo
 # Prepare the F and H functions. 
-#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
-for t in range(1,time_steps):
-    u = x[0]*time[t]
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo
+def get_F_and_H(x,rho,time,coth):
+    F = np.zeros(len(time))
+    H = np.zeros(len(time))
 
-    c  = (1-cos(u))/u           if u >= 0.005 else 0.5*u+u**3/24.0
-    s  =    sin(u)              if u >= 0.005 else     u-u**3/6.0
-    cs = sin(u)/u**2 - cos(u)/u if u >= 0.005 else u/3.0 - u**3/30.0
+    # Add in the the t=0 contribution. I actually think that the first term
+    # here should be divided by an extra x[0], but for whatever reason its not
+    H[0] = 0.5*rho[0]*(2*T/x[0]+coth[0]) + integral 
+    for t in range(1,len(time)):
+        wt = x[0]*time[t]
 
-    F[t] += time[t]*rho[0]*cs
-    H[t] += time[t]*rho[0]/u*(coth[0]*(s-c)+c*invF)
-
-    sinLast = sin(x[0]*time[t])
-    cosLast = cos(x[0]*time[t])
-
-    for i in range(1,len(rho)):
-        sinNext = sin(x[i]*time[t])
-        cosNext = cos(x[i]*time[t])
-
-        theta = x[i]*time[t]-x[i-1]*time[t]
-        st = 1-sin(theta) /theta if theta >= 5e-3 else theta**2/6 - theta**4/120
-        ct =(1-cos(theta))/theta if theta >= 5e-3 else 0.5*theta - theta**3/24
-
-        H[t] += rho[i]/x[i]    *coth[i]  *(st*sinNext + ct*cosNext) - \
-                rho[i-1]/x[i-1]*coth[i-1]*(st*sinLast  - ct*cosLast )
-
-        F[t] += rho[i]  /x[i]  *(ct*sinNext-st*cosNext) + \
-                rho[i-1]/x[i-1]*(ct*sinLast+st*cosLast)
-
-        sinLast = sinNext
-        cosLast = cosNext
-
-    H[t] /= time[t]
-    F[t] /= time[t]
-
-#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0
+        c  = (1-cos(wt))/wt  if wt >= 0.005 else 0.5*wt+wt**3/24.0
+        s  =    sin(wt)      if wt >= 0.005 else     wt-wt**3/6.0
 
 
+        F[t] = rho[0]*(sin(wt)/wt**2-cos(wt)/wt) if wt >= 5e-3 else\
+               rho[0]*(wt*0.3333333   -   wt**3/30.)
 
+        H[t] = rho[0]/wt*(coth[0]*(s-c)+c*2*T/x[0])
+    
 
+        sinLast = sin(x[0]*time[t])
+        cosLast = cos(x[0]*time[t])
 
+        for i in range(1,len(rho)):
+            sinNext = sin(x[i]*time[t])
+            cosNext = cos(x[i]*time[t])
+
+            theta = x[i]*time[t]-x[i-1]*time[t]
+            st = 1-sin(theta) /theta if theta >= 5e-3 else theta**2/6 - theta**4/120
+            ct =(1-cos(theta))/theta if theta >= 5e-3 else 0.5*theta  - theta**3/24
+    
+            H[t] += (rho[i]  /x[i]  *coth[i]  *(st*sinNext + ct*cosNext) - \
+                     rho[i-1]/x[i-1]*coth[i-1]*(st*sinLast - ct*cosLast))/time[t]
+    
+            F[t] += (rho[i]  /x[i]  *(ct*sinNext-st*cosNext) + \
+                     rho[i-1]/x[i-1]*(ct*sinLast+st*cosLast))/time[t]
+
+            sinLast = sinNext
+            cosLast = cosNext
+
+    return F, H
+
+#0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo.oO0Oo
+F, H = get_F_and_H(x,rho,time,coth,)
 
 
 
@@ -112,7 +128,6 @@ def gasket(alpha,beta):
     dbw = math.exp(-psq*H[0])  
     #dbw2 = math.exp(-psq*H2[0])  
     #dbwp = dbw/math.pi   #F in fortran code
-    S = 0.0
     sm = time[0]*betaT
     sinLast = sin(sm)
     cosLast = cos(sm)
@@ -122,6 +137,7 @@ def gasket(alpha,beta):
     ex1 = 1.0
     qLast = cos(psq*F[0])*ex1 - dbw
     rLast = sin(psq*F[0])*ex1
+    S = 0.0
     for t in range(1,time_steps):
         sinNext = sin(time[t]*betaT)
         cosNext = cos(time[t]*betaT)
@@ -190,6 +206,9 @@ if abs(x-1.2160162511496266)/x > 1e-6:
 
 print("All good!")
 
+"""
+
+"""
 
 """
 
@@ -301,3 +320,53 @@ plt.plot(beta,Sg)
 Sg
 
 """
+
+
+
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
+    """
+
+    x = [0.2, 0.6, 1.2]
+    f = [1.0, 4.0, 0.0]
+    f = normalizeRho(x,f)
+    T = 0.0255
+
+    time = [0.0, 0.8, 1.0, 1.4]
+
+    coth = np.zeros(len(f))
+    for i in range(len(f)):
+        coth[i] = math.cosh(x[i]*0.5/T)/math.sinh(x[i]*0.5/T)
+
+    F, H = get_F_and_H(x,f,time,coth)
+    print(F)
+
+    """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
