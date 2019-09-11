@@ -26,24 +26,27 @@ def interpolate(xVec,yVec,x):
             return m*(x-xVec[i])+b
     return 0.0
 
-uniformX = np.linspace(0,xVec[-1],50)
+uniformX = np.linspace(0,0.17,17*4+1)
 uniformY = [interpolate(xVec,fVec,x) for x in uniformX]
 
-uniformX = [float("{0:.3f}".format(round(a,3))) for a in uniformX]
-uniformY = [float("{0:.3f}".format(round(a,3))) for a in uniformY]
+uniformX = [float("{0:.7f}".format(round(a,7))) for a in uniformX]
+uniformY = [float("{0:.5f}".format(round(a,5))) for a in uniformY]
+#print(len(uniformX))
+#print(" "); print(uniformX)
+#print(" "); print(uniformY); print(" ")
 
 fig = plt.figure()
 plt.plot(xVec,fVec)
 plt.plot(uniformX,uniformY)
 
-print(""); print(uniformX[1:-1])
-print(""); print(uniformY[1:-1]); print("")
+#print(""); print(uniformX[1:-1])
+#print(""); print(uniformY[1:-1]); print("")
 
 X_to_Print = uniformX[1:-1]
 Y_to_Print = uniformY[1:-1]
-for i in range(len(X_to_Print)):
-    #print("X("+str(i+1)+") = "+str(X_to_Print[i]))
-    print("Q("+str(i+1)+") = "+str(Y_to_Print[i]))
+#for i in range(len(X_to_Print)):
+#    print("X("+str(i+1)+") = "+str(X_to_Print[i]))
+#    print("Q("+str(i+1)+") = "+str(Y_to_Print[i]))
 
 #plt.draw();plt.pause(1); raw_input("<Hit Enter To Close>"); plt.close(fig)
 
