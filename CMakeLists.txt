@@ -3,7 +3,6 @@ cmake_minimum_required( VERSION 3.2 )
 set( CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Supported configuration types" FORCE )
         
 set(CMAKE_CXX_STANDARD 17)
-
 if ( NOT GIT_EXECUTABLE )
     find_package( Git 2.1 )
     if ( NOT GIT_FOUND )
@@ -231,6 +230,10 @@ if( NOT TARGET catch-adapter )
     add_subdirectory( ${ROOT_DIRECTORY}/subprojects/catch-adapter )
 endif()
 
+if( NOT TARGET range-v3-adapter )
+    add_subdirectory( ${ROOT_DIRECTORY}/subprojects/range-v3-adapter )
+endif()
+
 
 if ( NOT GIT_EXECUTABLE )
     find_package( Git )
@@ -271,7 +274,7 @@ set( PREFIX cats_${CMAKE_CXX_COMPILER_ID}_${CMAKE_SYSTEM_NAME} )
 
 target_link_libraries( cats INTERFACE "$<$<AND:$<CONFIG:RELEASE>,$<BOOL:${link_time_optimization}>>:${${PREFIX}_RELEASE_flags};${${PREFIX}_link_time_optimization_flags}$<$<BOOL:${profile_generate}>:${${PREFIX}_profile_generate_flags};>$<$<BOOL:${profile_use}>:${${PREFIX}_profile_use_flags};>$<$<BOOL:${nonportable_optimization}>:${${PREFIX}_nonportable_optimization_flags};>>$<$<CONFIG:DEBUG>:$<$<BOOL:${coverage}>:${${PREFIX}_coverage_flags};>>$<$<BOOL:CXX_appended_flags>:${CXX_appended_flags};>$<$<BOOL:cats_appended_flags>:${cats_appended_flags};>" )
 
-target_link_libraries( cats INTERFACE catch-adapter )
+target_link_libraries( cats INTERFACE catch-adapter INTERFACE range-v3-adapter )
 
 if( NOT is_subproject )
     enable_testing() 

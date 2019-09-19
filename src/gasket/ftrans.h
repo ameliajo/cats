@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <range/v3/all.hpp>
 
 
 template <typename Float, typename Range>
@@ -13,8 +14,7 @@ auto ftrans( Float T, Range X, Range Q, Range t){
         SINSM = sin(SM);
         COSSM = cos(SM);
         ZM = X[0]*0.5/T;
-        //std::cout << ZM << std::endl;
-        for (size_t j = 1; j < t.size(); ++j){
+        for (size_t j = 1; j < X.size(); ++j){
             S = X[j]*t[i];
             SINS = sin(S);
             COSS = cos(S);
@@ -27,7 +27,7 @@ auto ftrans( Float T, Range X, Range Q, Range t){
                 }
                 else {
                     SINT = SINS*COSSM - COSS*SINSM;
-                    COST = COSS*COSSM - SINS*SINSM;
+                    COST = COSS*COSSM + SINS*SINSM;
                     ST =  1.0-SINT /U;
                     CT = (1.0-COST)/U;
                 }
@@ -37,16 +37,14 @@ auto ftrans( Float T, Range X, Range Q, Range t){
             PC[i] = PC[i] + Q[j]/X[j]*H*(ST*SINS+CT*COSS) - Q[j-1]/X[j-1]*HM*(ST*SINSM-CT*COSSM);
             PS[i] = PS[i] + Q[j]/X[j]*  (CT*SINS-ST*COSS) + Q[j-1]/X[j-1]*   (CT*SINSM+ST*COSSM);
             SM = S;
-            SINSM=SINS;
+            SINSM = SINS;
             COSSM = COSS;
-            ZM=Z;
+            ZM = Z;
         }
-        PC[i]=PC[i]/t[i];
-        PS[i]=PS[i]/t[i];
-        std::cout << PC[i] << std::endl;
-        break;
+        PC[i] = PC[i]/t[i];
+        PS[i] = PS[i]/t[i];
     }
-
+    return std::make_tuple(PC,PS);
 
 
 

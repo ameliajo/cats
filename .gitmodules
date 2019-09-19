@@ -1,3 +1,9 @@
 [submodule "dependencies/catch-adapter"]
 	path = dependencies/catch-adapter
 	url = https://github.com/njoy/catch-adapter
+[submodule "range-v3-adapter"]
+	path = range-v3-adapter
+	url = https://github.com/njoy/range-v3-adapter
+[submodule "dependencies/range-v3-adapter"]
+	path = dependencies/range-v3-adapter
+	url = https://github.com/njoy/range-v3-adapter

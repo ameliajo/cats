@@ -19,6 +19,7 @@ REAL(8) :: RR, ANK(2,10), U, BF(10), tstep
 INTEGER :: NMAX(2), NPTS
 
 NT = 1400  !number of time steps
+NT = 80
 NE = 100   ! nbeta
 tstep = 0.1  !time step size
 NPTS = 100 ! nalphas
@@ -436,9 +437,9 @@ CALL INTG(X2,Q2,A2,5)
 !write(*,90) Q
 norm = wgt / AM / (U+A)
 
-CALL FTRANS(temperature,X2,Q2,t2,PC2,PS2,5,10)
+!CALL FTRANS(temperature,X2,Q2,t2,PC2,PS2,5,10)
 !write(*,*) PC2
-!CALL FTRANS(temperature,X,Q,t,PC,PS,JS3,NT)
+CALL FTRANS(temperature,X,Q,t,PC,PS,JS3,NT)
 
 F=X(1)*0.5/temperature
 CALL COTH(H,F)
@@ -524,29 +525,33 @@ REAL(8) :: PC(NT), PS(NT), t(NT)
 REAL(8) :: X(JS3),Q(JS3),temperature
 
 REAL(8) :: S,SM, SINSM, COSSM, SINS, COSS, SINT, COST, ST, CT, Z, ZM, H, HM, U
-X(1) = 0.1
-X(2) = 0.2
-X(3) = 0.3
-X(4) = 0.5
-X(5) = 0.8
+!X(1) = 0.1
+!X(2) = 0.7
+!X(3) = 0.10
+!X(4) = 0.11
+!X(5) = 0.20
 
-Q(1) = 0.1
-Q(2) = 0.3
-Q(3) = 0.7
-Q(4) = 0.4
-Q(5) = 0.0
- 
-t(1) = 0.01
-t(2) = 0.02
-t(3) = 0.03
-t(4) = 0.04
-t(5) = 0.05
-t(6) = 0.06
-t(7) = 0.07
-t(8) = 0.08
-t(9) = 0.09
-t(10) = 0.10
+!Q(1) = 0.0
+!Q(2) = 0.5
+!Q(3) = 0.0
+!Q(4) = 0.4
+!Q(5) = 0.0
+! 
+!t(1) = 0.01
+!t(2) = 0.02
+!t(3) = 0.03
+!t(4) = 0.04
+!t(5) = 0.05
+!t(6) = 0.06
+!t(7) = 0.07
+!t(8) = 0.08
+!t(9) = 0.09
+!t(10) = 0.10
 
+DO i=1,NT
+  PC(i)=0.
+  PS(i)=0.
+ENDDO
 
 DO i=2,NT
   PC(i)=0.
@@ -555,8 +560,6 @@ DO i=2,NT
   SINSM = SIN(SM)
   COSSM = COS(SM)
   ZM = X(1)*0.5/temperature
-  write(*,*) ZM
-  exit
   DO j=2,JS3
     S = X(j)*t(i)
     SINS = SIN(S)
@@ -577,6 +580,8 @@ DO i=2,NT
     CALL COTH(HM,ZM)
     PC(i) = PC(i) + Q(j)/X(j)*H*(ST*SINS+CT*COSS) - Q(j-1)/X(j-1)*HM*(ST*SINSM-CT*COSSM)
     PS(i) = PS(i) + Q(j)/X(j)*(CT*SINS-ST*COSS) + Q(j-1)/X(j-1)*(CT*SINSM+ST*COSSM)
+    !write(*,*) i,j,ST*SINSM,CT*COSSM
+
     SM = S
     SINSM=SINS
     COSSM = COSS
@@ -585,6 +590,18 @@ DO i=2,NT
   PC(i)=PC(i)/t(i)
   PS(i)=PS(i)/t(i)
 ENDDO
+  100 FORMAT('    ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ')
+  90 FORMAT('    ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ')
+  !write(*,90) X
+  !write(*,*)
+  !write(*,90) Q
+  !write(*,*)
+  write(*,90) t
+  write(*,*)
+  write(*,100) PC
+  write(*,*)
+  write(*,100) PS
+  return
 
 END SUBROUTINE
 
