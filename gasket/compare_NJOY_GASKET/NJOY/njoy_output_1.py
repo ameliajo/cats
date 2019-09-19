@@ -2043,4 +2043,20 @@ njoy_sab_output = [ \
     0.508866E-01, 0.497085E-01, 0.494472E-01, 0.487090E-01, 0.484789E-01, \
     0.470085E-01, 0.468237E-01, 0.459546E-01, 0.457895E-01, 0.439997E-01, \
     0.438900E-01, 0.428343E-01, 0.427597E-01, 0.406142E-01, 0.405671E-01]
+import matplotlib.pyplot as plt
+import numpy as np
+# njoy_sab_output currently has the negative beta side of the non-symmetric scattering law.
+# you index it with sab[b+a*len(betas)]. So if you pull out the value corresponding
+# to a0 and b2, then it's actually S_n.sym(a=a0,b=-b2)
+
+fullBetas = [-b for b in njoy_betas][::-1] + njoy_betas[1:]
+for a in range(len(njoy_alphas)):
+    sab_nonsym_negBetas = [njoy_sab_output[b+a*len(njoy_betas)] for b in range(len(njoy_betas))]
+    sab_nonsym_posBetas = [np.exp(-njoy_betas[b])*sab_nonsym_negBetas[b] for b in range(len(sab_nonsym_negBetas))]
+    sab_nonsym_negBetas = sab_nonsym_negBetas[1:][::-1]
+    sab_nonsym_full = list(sab_nonsym_negBetas) + list(sab_nonsym_posBetas)
+    plt.plot(fullBetas,sab_nonsym_full)
+plt.show()
+
+
 

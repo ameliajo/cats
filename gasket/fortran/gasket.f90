@@ -194,7 +194,6 @@ ENDDO
 ALLOCATE(t(NT))
 t(1) = 0.0
 DO i=2,NT
-  !t(i) = t(i-1)+tstep
   IF (i.GT.200.AND.i.LE.400) THEN
      t(i) = t(i-1)+tstep*5
   ELSEIF (i.GT.400.AND.i.LE.600) THEN
@@ -244,7 +243,6 @@ DO ialpha=1,NPTS
   BPS = PSQ
 
   DBWP = DBW/3.1416
-  !write(*,*) DBW
 
   CALL SCINT(t,GC,GS,EPS,S1,temperature, APS,BPS,DBWP,NT,NE)
 
@@ -338,7 +336,6 @@ DO k=1,JS5
     DO j=1,l
       ind = j-NMAX(k)-1
       BETAIN = ABS(BETA(i)-FLOAT(ind)*X5(k)/temperature)
-!      if(i.eq.1) write(*,*) BETAIN
       CALL STERP(BETAIN,BETA,NE,SINT,SLOG)
       SK(i)=SK(i)+ANK(k,ABS(ind)+1)*SINT
     ENDDO
@@ -361,15 +358,11 @@ INTEGER :: i, j
 
 REAL(8) :: SM, SINSM, COSSM, V0, U, SINS, COSS, V, ST, CT, SINT, COST, AL
 REAL(8) :: EX1, EX2
-!REAL(8), ALLOCATABLE :: Q(:), R(:)
 REAL(8) :: Q1,Q2,R1,R2
 
-!ALLOCATE(Q(NT), R(NT))
 
 EX1 = EXP(B*GC(1))
 EX2 = EXP(-A*temperature*t(1)**2)
-!Q(1) = (COS(B*GS(1))*EX1-1.)*EX2
-!R(1) = SIN(B*GS(1))*EX1*EX2
 Q1 = (COS(B*GS(1))*EX1-1.)*EX2
 R1 = SIN(B*GS(1))*EX1*EX2
 
@@ -377,8 +370,6 @@ DO i=1,NE
   AL = A-EPS(i)
   IF (AL.EQ.0) THEN
     WRITE(*,*) 'AL IS EQUAL to 0'
-    !CALL INTG(t,Q,S(i),NT)
-    !S(i)=S(i)*F
   ELSE
     S(i) = 0.
     SM = t(1)*AL
@@ -402,8 +393,6 @@ DO i=1,NE
       ENDIF
   40  EX1 = EXP(B*GC(j))
       EX2 = EXP(-A*temperature*t(j)**2)
-!      Q(j) = (COS(B*GS(j))*EX1-1.)*EX2
-!      R(j) = SIN(B*GS(j))*EX1*EX2
       Q2 = (COS(B*GS(j))*EX1-1.)*EX2
       R2 = SIN(B*GS(j))*EX1*EX2
       S(i)=S(i)+Q2*(ST*SINS+CT*COSS)-Q1*(ST*SINSM-CT*COSSM)
@@ -419,7 +408,6 @@ DO i=1,NE
   ENDIF
 ENDDO
 
-!DEALLOCATE(Q,R)
 
 END SUBROUTINE
 
@@ -431,16 +419,26 @@ IMPLICIT NONE
 
 INTEGER :: JS3, NT
 REAL(8) :: X(JS3), Q(JS3), t(NT)
+REAL(8) :: X2(5), Q2(5), t2(10)
 REAL(8) :: wgt, temperature, AM, TBAR
 
 INTEGER :: i
-REAL(8) :: U, norm, F, H, A, C, CS, S
+REAL(8) :: U, norm, F, H, A, C, CS, S, A2
 REAL(8) :: PC(NT), PS(NT)
+REAL(8) :: PC2(10), PS2(10)
 
 U = Q(1)*X(1)/3.
+! puts integral result in variable A -- JS3 is the length of X and Q
 CALL INTG(X,Q,A,JS3)
+CALL INTG(X2,Q2,A2,5)
+90 FORMAT('    ',F12.5,', ',F12.5,', ',F12.5,', ',F12.5,', ',F12.5,', ')
+!write(*,90) X
+!write(*,90) Q
 norm = wgt / AM / (U+A)
-CALL FTRANS(temperature,X,Q,t,PC,PS,JS3,NT)
+
+CALL FTRANS(temperature,X2,Q2,t2,PC2,PS2,5,10)
+!write(*,*) PC2
+!CALL FTRANS(temperature,X,Q,t,PC,PS,JS3,NT)
 
 F=X(1)*0.5/temperature
 CALL COTH(H,F)
@@ -526,6 +524,29 @@ REAL(8) :: PC(NT), PS(NT), t(NT)
 REAL(8) :: X(JS3),Q(JS3),temperature
 
 REAL(8) :: S,SM, SINSM, COSSM, SINS, COSS, SINT, COST, ST, CT, Z, ZM, H, HM, U
+X(1) = 0.1
+X(2) = 0.2
+X(3) = 0.3
+X(4) = 0.5
+X(5) = 0.8
+
+Q(1) = 0.1
+Q(2) = 0.3
+Q(3) = 0.7
+Q(4) = 0.4
+Q(5) = 0.0
+ 
+t(1) = 0.01
+t(2) = 0.02
+t(3) = 0.03
+t(4) = 0.04
+t(5) = 0.05
+t(6) = 0.06
+t(7) = 0.07
+t(8) = 0.08
+t(9) = 0.09
+t(10) = 0.10
+
 
 DO i=2,NT
   PC(i)=0.
@@ -534,6 +555,8 @@ DO i=2,NT
   SINSM = SIN(SM)
   COSSM = COS(SM)
   ZM = X(1)*0.5/temperature
+  write(*,*) ZM
+  exit
   DO j=2,JS3
     S = X(j)*t(i)
     SINS = SIN(S)
