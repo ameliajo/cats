@@ -590,18 +590,17 @@ DO i=2,NT
   PC(i)=PC(i)/t(i)
   PS(i)=PS(i)/t(i)
 ENDDO
-  100 FORMAT('    ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ')
-  90 FORMAT('    ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ')
+  !100 FORMAT('    ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ')
+  !90 FORMAT('    ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ')
   !write(*,90) X
   !write(*,*)
   !write(*,90) Q
   !write(*,*)
-  write(*,90) t
-  write(*,*)
-  write(*,100) PC
-  write(*,*)
-  write(*,100) PS
-  return
+  !write(*,90) t
+  !write(*,*)
+  !write(*,100) PC
+  !write(*,*)
+  !write(*,100) PS
 
 END SUBROUTINE
 
