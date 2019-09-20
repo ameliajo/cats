@@ -230,8 +230,10 @@ DO ialpha=2,NPTS
   A(ialpha) = 0.1 + A(ialpha-1)
 END DO
 
+80 FORMAT('    ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ')
 90 FORMAT('    ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ')
 100 FORMAT('    ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ')
+101 FORMAT('    ',ES13.7,', ',ES13.7,', ',ES13.7,', ',ES13.7,', ',ES13.7,', ')
 WRITE(10,*) "alphas = ";WRITE(10,100) A;    WRITE(10,*)
 WRITE(10,*) "betas = "; WRITE(10,100) BETA; WRITE(10,*)
 
@@ -264,23 +266,25 @@ DO ialpha=1,NPTS
     U=0.5*(U-1./U)
     ARG1(i)=W5*Q5(i)/(AM*X5(i)*U)
     ARG2(i)=W5*Q5(i)/(AM*X5(i)*TANH(RR))
-    write(*,*)"---------------------------------------------"
-    write(*,*) ARG1(i)*PSQ, NMAX(i)
-    write(*,100) BF
-    write(*,*) 
+    !write(*,*)"---------------------------------------------"
+    !write(*,*) ARG1(i)*PSQ, NMAX(i)
+    !write(*,100) BF
+    !write(*,*) 
     ARG1(i)=0.05
     PSQ = 1.0
     CALL BESSL(ARG1(i)*PSQ,BF,10, NMAX(i)) !10 first moments of modified Bessel fct of first kind (I_n)
-    write(*,*) "NMAX",NMAX(i)
-    write(*,100) BF
-    if (i.eq.2) return
+    !write(*,*) "NMAX",NMAX(i)
+    !write(*,100) BF
+    !if (i.eq.2) return
     EX = EXP(-PSQ*ARG2(i))
     DO j=1,10
       ANK(i,j)=BF(j)*EX
     ENDDO
   ENDDO
 
+  !write(*,80) BETA
   CALL RCONV(NE,JS5, NMAX,X5,ANK,temperature,S1,BETA)
+  return
 
   CALL ACON2(NE,NMAX,X5,ANK, temperature, SZCON, EPS, AM, W1, PSQ, S2)
   
@@ -337,6 +341,9 @@ REAL(8) :: S1(NE), X5(JS5), temperature, BETA(NE),  ANK(JS5,20)
 REAL(8) :: SLOG(1000), SK(1000), SINT, BETAIN
 
 DO k=1,JS5
+  SLOG(k)=0.0
+ENDDO
+DO k=1,JS5
   DO i=1,NE
     IF(S1(i).LE.0.0) THEN
       SLOG(i)=-100
@@ -350,12 +357,32 @@ DO k=1,JS5
     DO j=1,l
       ind = j-NMAX(k)-1
       BETAIN = ABS(BETA(i)-FLOAT(ind)*X5(k)/temperature)
+      !write(*,*) k, abs(ind)+1
+      !write(*,*) ANK(k,ABS(ind)+1)
+      !write(*,*) ANK(k+3,ABS(ind)+1+4)
+      !return
+      write(*,*) 
+      !write(*,102) SLOG
+      !write(*,*) BETAIN
+      BETAIN = -0.01
       CALL STERP(BETAIN,BETA,NE,SINT,SLOG)
+      write(*,*) SINT
+      write(*,*)
+
       SK(i)=SK(i)+ANK(k,ABS(ind)+1)*SINT
+
     ENDDO
     S1(i)=SK(i)
+    if (i.eq.1) return
   ENDDO
+
 ENDDO
+80 FORMAT('    ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ')
+90 FORMAT('    ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ')
+100 FORMAT('    ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ')
+101 FORMAT('    ',ES13.7,', ',ES13.7,', ',ES13.7,', ',ES13.7,', ',ES13.7,', ')
+102 FORMAT('    ',ES14.7,', ',ES14.7,', ',ES14.7,', ',ES14.7,', ',ES14.7,', ')
+
 
 END SUBROUTINE
 

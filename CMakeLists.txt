@@ -268,7 +268,9 @@ add_library( cats INTERFACE )
 target_sources( cats INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/cats.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/bessl.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/ftrans.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/rconv.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/scint.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/sterp.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/testing.h" )
 
 target_include_directories( cats INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/src src/include )

@@ -580,7 +580,9 @@
     "src/cats.h", 
     "src/gasket/bessl.h", 
     "src/gasket/ftrans.h", 
+    "src/gasket/rconv.h", 
     "src/gasket/scint.h", 
+    "src/gasket/sterp.h", 
     "src/generalTools/testing.h"
   ], 
   "ignore pattern": "$^", 
@@ -604,7 +606,9 @@
     "gasket": [
       "src/gasket/test/bessl.test.cpp", 
       "src/gasket/test/ftrans.test.cpp", 
-      "src/gasket/test/scint.test.cpp"
+      "src/gasket/test/rconv.test.cpp", 
+      "src/gasket/test/scint.test.cpp", 
+      "src/gasket/test/sterp.test.cpp"
     ]
   }, 
   "update": true
