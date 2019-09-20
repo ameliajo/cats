@@ -231,7 +231,7 @@ DO ialpha=2,NPTS
 END DO
 
 90 FORMAT('    ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ')
-100 FORMAT('    ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ')
+100 FORMAT('    ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ')
 WRITE(10,*) "alphas = ";WRITE(10,100) A;    WRITE(10,*)
 WRITE(10,*) "betas = "; WRITE(10,100) BETA; WRITE(10,*)
 
@@ -249,7 +249,7 @@ DO ialpha=1,NPTS
   !write(*,*) DBWP
   !write(*,90) APS,BPS
   CALL SCINT(t,GC,GS,EPS,S1,temperature, APS,BPS,DBWP,NT,NE)
-  exit
+  !exit
 
   SZCON = DBW*SQRT(AM/(12.566371*PSQ*W1*temperature))
   DO i=1,NE
@@ -264,7 +264,16 @@ DO ialpha=1,NPTS
     U=0.5*(U-1./U)
     ARG1(i)=W5*Q5(i)/(AM*X5(i)*U)
     ARG2(i)=W5*Q5(i)/(AM*X5(i)*TANH(RR))
+    write(*,*)"---------------------------------------------"
+    write(*,*) ARG1(i)*PSQ, NMAX(i)
+    write(*,100) BF
+    write(*,*) 
+    ARG1(i)=0.05
+    PSQ = 1.0
     CALL BESSL(ARG1(i)*PSQ,BF,10, NMAX(i)) !10 first moments of modified Bessel fct of first kind (I_n)
+    write(*,*) "NMAX",NMAX(i)
+    write(*,100) BF
+    if (i.eq.2) return
     EX = EXP(-PSQ*ARG2(i))
     DO j=1,10
       ANK(i,j)=BF(j)*EX
@@ -412,8 +421,8 @@ DO i=1,NE
     S(i)=S(i)*F/AL
   ENDIF
 ENDDO
-90 FORMAT('    ',F12.7,', ',F12.7,', ',F12.7,', ',F12.7,', ',F12.7,', ')
-write(*,90) S
+!90 FORMAT('    ',F12.7,', ',F12.7,', ',F12.7,', ',F12.7,', ',F12.7,', ')
+!write(*,90) S
 
 
 END SUBROUTINE

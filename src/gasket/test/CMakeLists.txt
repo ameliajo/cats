@@ -1,5 +1,6 @@
 
 add_executable( gasket.test
+                bessl.test.cpp
                 ftrans.test.cpp
                 scint.test.cpp )
 target_compile_options( gasket.test PRIVATE ${${PREFIX}_common_flags}
