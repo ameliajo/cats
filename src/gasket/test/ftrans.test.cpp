@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "../ftrans.h"
+#include "../../generalTools/testing.h"
 
-auto equal = [](auto x, auto y, double tol = 1e-6){ return x == Approx(y).epsilon(tol); };
 
 TEST_CASE( "ftrans" ){
   GIVEN( "Simple, small X Q t vectors" ){

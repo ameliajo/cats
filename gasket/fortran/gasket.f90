@@ -230,6 +230,7 @@ DO ialpha=2,NPTS
   A(ialpha) = 0.1 + A(ialpha-1)
 END DO
 
+90 FORMAT('    ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ')
 100 FORMAT('    ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ',E12.6,', ')
 WRITE(10,*) "alphas = ";WRITE(10,100) A;    WRITE(10,*)
 WRITE(10,*) "betas = "; WRITE(10,100) BETA; WRITE(10,*)
@@ -245,7 +246,10 @@ DO ialpha=1,NPTS
 
   DBWP = DBW/3.1416
 
+  !write(*,*) DBWP
+  !write(*,90) APS,BPS
   CALL SCINT(t,GC,GS,EPS,S1,temperature, APS,BPS,DBWP,NT,NE)
+  exit
 
   SZCON = DBW*SQRT(AM/(12.566371*PSQ*W1*temperature))
   DO i=1,NE
@@ -408,6 +412,8 @@ DO i=1,NE
     S(i)=S(i)*F/AL
   ENDIF
 ENDDO
+90 FORMAT('    ',F12.7,', ',F12.7,', ',F12.7,', ',F12.7,', ',F12.7,', ')
+write(*,90) S
 
 
 END SUBROUTINE

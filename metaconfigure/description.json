@@ -578,7 +578,9 @@
   }, 
   "header files": [
     "src/cats.h", 
-    "src/gasket/ftrans.h"
+    "src/gasket/ftrans.h", 
+    "src/gasket/scint.h", 
+    "src/generalTools/testing.h"
   ], 
   "ignore pattern": "$^", 
   "implementation files": [], 
@@ -599,7 +601,8 @@
       "src/test/cats.test.cpp"
     ], 
     "gasket": [
-      "src/gasket/test/ftrans.test.cpp"
+      "src/gasket/test/ftrans.test.cpp", 
+      "src/gasket/test/scint.test.cpp"
     ]
   }, 
   "update": true
