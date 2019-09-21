@@ -361,20 +361,25 @@ DO k=1,JS5
       !write(*,*) ANK(k,ABS(ind)+1)
       !write(*,*) ANK(k+3,ABS(ind)+1+4)
       !return
-      write(*,*) 
+      !write(*,*) 
       !write(*,102) SLOG
       !write(*,*) BETAIN
-      BETAIN = -0.01
+      !BETAIN = -0.01
       CALL STERP(BETAIN,BETA,NE,SINT,SLOG)
-      write(*,*) SINT
-      write(*,*)
+  !    write(*,103) SINT
+      !write(*,103) SLOG(1),SLOG(2),SLOG(3), SINT
+      !write(*,*)
 
       SK(i)=SK(i)+ANK(k,ABS(ind)+1)*SINT
+      write(*,103)ANK(k,ABS(ind)+1), SK(i)
 
     ENDDO
     S1(i)=SK(i)
-    if (i.eq.1) return
+    !if (i.eq.1) return
   ENDDO
+  write(*,*)
+   write(*,103) S1
+  return
 
 ENDDO
 80 FORMAT('    ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ')
@@ -382,6 +387,8 @@ ENDDO
 100 FORMAT('    ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ',E13.7,', ')
 101 FORMAT('    ',ES13.7,', ',ES13.7,', ',ES13.7,', ',ES13.7,', ',ES13.7,', ')
 102 FORMAT('    ',ES14.7,', ',ES14.7,', ',ES14.7,', ',ES14.7,', ',ES14.7,', ')
+103 FORMAT('    ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ')
+!write(*,103) S1
 
 
 END SUBROUTINE
