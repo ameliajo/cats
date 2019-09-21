@@ -3,6 +3,7 @@ add_executable( gasket.test
                 acon2.test.cpp
                 bessl.test.cpp
                 ftrans.test.cpp
+                gtg.test.cpp
                 rconv.test.cpp
                 scint.test.cpp
                 sterp.test.cpp )

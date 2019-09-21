@@ -2,13 +2,13 @@
 cmake_minimum_required( VERSION 3.2 )
 set( CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Supported configuration types" FORCE )
         
-set(CMAKE_CXX_STANDARD 17)
 if ( NOT GIT_EXECUTABLE )
     find_package( Git 2.1 )
     if ( NOT GIT_FOUND )
         message( FATAL_ERROR "git installation was not found." )
     endif()
 endif()
+set(CMAKE_CXX_STANDARD 17)
 
 if( NOT ROOT_DIRECTORY )
     set( ROOT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -269,6 +269,8 @@ target_sources( cats INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/cats.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/acon2.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/bessl.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/ftrans.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/intg.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/rconv.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/scint.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/sterp.h"

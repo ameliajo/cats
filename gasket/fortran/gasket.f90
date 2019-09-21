@@ -270,8 +270,8 @@ DO ialpha=1,NPTS
     !write(*,*) ARG1(i)*PSQ, NMAX(i)
     !write(*,100) BF
     !write(*,*) 
-    ARG1(i)=0.05
-    PSQ = 1.0
+    !ARG1(i)=0.05
+    !PSQ = 1.0
     CALL BESSL(ARG1(i)*PSQ,BF,10, NMAX(i)) !10 first moments of modified Bessel fct of first kind (I_n)
     !write(*,*) "NMAX",NMAX(i)
     !write(*,100) BF
@@ -286,7 +286,11 @@ DO ialpha=1,NPTS
   CALL RCONV(NE,JS5, NMAX,X5,ANK,temperature,S1,BETA)
   !return
 
+  !write(*,103) S2
+  !write(*,*) 
   CALL ACON2(NE,NMAX,X5,ANK, temperature, SZCON, EPS, AM, W1, PSQ, S2)
+  return
+103 FORMAT('    ',ES10.4,', ',ES10.4,', ',ES10.4,', ',ES10.4,', ',ES10.4,', ')
   
   DO i=1,NE
     S(i) = S1(i)+S2(i)
@@ -317,18 +321,24 @@ real(8) :: EPS(NE)
     SK(i)=0.0
     l=NMAX(2)*2+1
     DO j=1,l
+    write(*,*) j
       m=NMAX(1)*2+1
       ind2 = j-NMAX(2)-1
+      write(*,*) m,ind2
       DO k=1,m
         ind1 = k-NMAX(1)-1
+        write(*,*) ind1
+      return
         EIN = ABS(EPS(i)-ind1*X5(1)-ind2*X5(2))
         SINT = SZCON*EXP(-AM*(EIN**2+(PSQ*W1/AM)**2)/(4.*PSQ*temperature*W1))
-        if (SINT.GT.200) WRITE(*,*) SINT, ind1, ind2, ANK(2,ABS(ind2)+1), ANK(1,ABS(ind1)+1)
+        !if (SINT.GT.200) WRITE(*,*) SINT, ind1, ind2, ANK(2,ABS(ind2)+1), ANK(1,ABS(ind1)+1)
         SK(i) = SK(i) + ANK(2,ABS(ind2)+1)*ANK(1,ABS(ind1)+1)*SINT
       ENDDO
     ENDDO
     S2(i)=SK(i)
   ENDDO
+  write(*,103) S2
+103 FORMAT('    ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ')
 END SUBROUTINE
 
 SUBROUTINE RCONV(NE,JS5, NMAX,X5,ANK,temperature,S1,BETA)

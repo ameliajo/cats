@@ -4,42 +4,30 @@
 
 template <typename Range, typename Float, typename RangeInts>
 auto acon2(RangeInts NMAX, Range X5, Range ANK, Float T, Float SZCON, Range EPS, 
-  Float AM, Float W1, Float PSQ, Range S2) {
+  Float AM, Float W1, Float PSQ, Range& S2) {
+  using std::pow;
 
   int i, j, k, l, m, ind1, ind2, NE = S2.size();
   Range SK(1000);
-  Float SINT, EIN;
+  Float SINT, EIN, SINT_denominator = AM/(4.0*PSQ*T*W1), 
+        PSQ_power = pow(PSQ*W1/AM,2);
 
   for ( size_t i = 0; i < S2.size(); ++i ){
     SK[i] = 0.0;
-    for ( size_t j = 1; j < l; ++j ){
+    l = NMAX[1]*2+1;
+    for ( int j = 0; j < l; ++j ){
       m = NMAX[0]*2+1;
-      for ( int k = 0; k < m; ){
-        ind1 = k-NMAX[0]-1;
-        EIN = abs(EPS[i]-ind1*X5[0]-ind2*X5[1]);
-        SINT = SZCON*EXP(-AM*(EIN**2+(PSQ*W1/AM)**2)/(4.*PSQ*T*W1));
+      ind2 = j-NMAX[1];
+      for ( int k = 0; k < m; ++k){
+        ind1 = k-NMAX[0];
+        EIN = abs(EPS[i] - (k-NMAX[0])*X5[0] 
+                         - (j-NMAX[1])*X5[1]);
+        SINT = SZCON * exp(-(EIN*EIN+PSQ_power)*SINT_denominator);
+        SK[i] = SK[i] + ANK[1+(abs(j-NMAX[1]))*X5.size()] * \
+                        ANK[0+(abs(k-NMAX[0]))*X5.size()] * SINT;
       }
     }
+    S2[i] = SK[i];
   }
-  /*
-  DO i=1,NE
-    SK(i)=0.0
-    l=NMAX(2)*2+1
-    DO j=1,l
-      m=NMAX(1)*2+1
-      ind2 = j-NMAX(2)-1
-      DO k=1,m
-        ind1 = k-NMAX(1)-1
-        EIN = ABS(EPS(i)-ind1*X5(1)-ind2*X5(2))
-        SINT = SZCON*EXP(-AM*(EIN**2+(PSQ*W1/AM)**2)/(4.*PSQ*temperature*W1))
-        if (SINT.GT.200) WRITE(*,*) SINT, ind1, ind2, ANK(2,ABS(ind2)+1), ANK(1,ABS(ind1)+1)
-        SK(i) = SK(i) + ANK(2,ABS(ind2)+1)*ANK(1,ABS(ind1)+1)*SINT
-      ENDDO
-    ENDDO
-    S2(i)=SK(i)
-  ENDDO
-END SUBROUTINE
-
-*/
 }
 
