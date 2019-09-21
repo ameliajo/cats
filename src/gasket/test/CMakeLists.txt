@@ -1,5 +1,6 @@
 
 add_executable( gasket.test
+                acon2.test.cpp
                 bessl.test.cpp
                 ftrans.test.cpp
                 rconv.test.cpp

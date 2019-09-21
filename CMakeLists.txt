@@ -266,6 +266,7 @@ message( STATUS "-----------------------------------------------------------" )
 
 add_library( cats INTERFACE )
 target_sources( cats INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/cats.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/acon2.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/bessl.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/ftrans.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/rconv.h"

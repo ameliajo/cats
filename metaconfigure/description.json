@@ -578,6 +578,7 @@
   }, 
   "header files": [
     "src/cats.h", 
+    "src/gasket/acon2.h", 
     "src/gasket/bessl.h", 
     "src/gasket/ftrans.h", 
     "src/gasket/rconv.h", 
@@ -604,6 +605,7 @@
       "src/test/cats.test.cpp"
     ], 
     "gasket": [
+      "src/gasket/test/acon2.test.cpp", 
       "src/gasket/test/bessl.test.cpp", 
       "src/gasket/test/ftrans.test.cpp", 
       "src/gasket/test/rconv.test.cpp", 

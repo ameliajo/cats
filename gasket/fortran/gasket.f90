@@ -284,7 +284,7 @@ DO ialpha=1,NPTS
 
   !write(*,80) BETA
   CALL RCONV(NE,JS5, NMAX,X5,ANK,temperature,S1,BETA)
-  return
+  !return
 
   CALL ACON2(NE,NMAX,X5,ANK, temperature, SZCON, EPS, AM, W1, PSQ, S2)
   
@@ -371,16 +371,16 @@ DO k=1,JS5
       !write(*,*)
 
       SK(i)=SK(i)+ANK(k,ABS(ind)+1)*SINT
-      write(*,103)ANK(k,ABS(ind)+1), SK(i)
+!      write(*,103)ANK(k,ABS(ind)+1), SK(i)
 
     ENDDO
     S1(i)=SK(i)
     !if (i.eq.1) return
   ENDDO
-  write(*,*)
-   write(*,103) S1
-  return
-
+  !write(*,*)
+  ! write(*,103) S1
+  !return
+!
 ENDDO
 80 FORMAT('    ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ',F5.3,', ')
 90 FORMAT('    ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ',F10.7,', ')
