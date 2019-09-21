@@ -2,10 +2,11 @@
 #include <cmath>
 #include <range/v3/all.hpp>
 #include "intg.h"
+#include "ftrans.h"
 
-template <typename Range, typename Float, typename RangeInts>
-auto GTG(Float wgt, Float T, Float AM, Range X, Range Q, Range t, Range PC, 
-        Range PS, Float TBAR){
+template <typename Range, typename Float>
+auto GTG(Float wgt, Float T, Float AM, Range X, Range Q, Range t ){
+    using std::pow; using std::cosh; using std::sinh;
     int JS3 = X.size();
     int NT = t.size();
     int i;
@@ -17,63 +18,60 @@ auto GTG(Float wgt, Float T, Float AM, Range X, Range Q, Range t, Range PC,
 //REAL(8) :: X2(5), Q2(5), t2(10)
 //REAL(8) :: wgt, T, AM, TBAR
 
-    Float norm, F, H, C, CS, S;
+    Float F, H, C, CS, S, invU, TBAR;
 
     Float U = Q[0]*X[0]/3.0;
     // puts integral result in variable A -- JS3 is the length of X and Q
     //INTG(X,Q,A,JS3);
-    double A = INTG(X,Q);
+    Float A = INTG(X,Q);
 
-/*
-norm = wgt / AM / (U+A)
+    Float norm = wgt / AM / (U+A);
+    auto out = ftrans(T, X, Q, t);
+    Range PC = std::get<0>(out);
+    Range PS = std::get<1>(out);
 
-CALL FTRANS(T,X,Q,t,PC,PS,JS3,NT)
+    F = X[0]*0.5/T;
+    H = cosh(F)/sinh(F);
+    for (size_t i = 1; i < t.size(); ++i ){
+      U = X[0]*t[i];
+      if (U <= 0.005) {
+        C  = 0.5*U - pow(U,3)/24.0;
+        S  = U - pow(U,3)/6.0;
+        CS = U/3.0 - pow(U,3)/30.0;
+      } else {
+        C = cos(U);
+        S = sin(U);
+        invU = 1.0/U;
+        CS = S*invU*invU - C*invU;
+        C = (1.-C)*invU;
+      }
+      PC[i]=PC[i]+Q[0]/U*(H*(S-C)+C/F);
+      PS[i]=PS[i]+Q[0]*CS;
+    }
+    // Putting in the t=0 terms
+    PC[0] = 0.5*Q[0]*(1./F+H);
+    PS[0] = 0.0;
+    TBAR = Q[0]*T*X[0]/3.0;
 
-F=X[0]*0.5/T
-CALL COTH(H,F)
-DO i=2,NT
-  U=X[0]*t(i)
-  if (U <= 0.005) {
-    C=0.5*U - U**3/24.
-    S=U-U**3/6.
-    CS = U/3. - U**3/30.
-  } else {
-    C = COS(U)
-    S = SIN(U)
-    CS = S/U**2 - C/U
-    C = (1.-C)/U
-  }
-  PC(i)=PC(i)+Q[0]/U*(H*(S-C)+C/F)
-  PS(i)=PS(i)+Q[0]*CS
-ENDDO
-PC[0]= 0.5*Q[0]*(1./F+H)
-PS[0]= 0.
-TBAR = Q[0]*T*X[0]/3.
+    for (size_t i=0; i < X.size(); ++i ){
+      F = X[i]*0.5/T;
+      H = cosh(F)/sinh(F);
+      Q[i] = Q[i]*H/X[i];
+    }
+    A = INTG(X,Q);
+    PC[0]=PC[0]+A;
+    for (size_t i = 0; i < X.size(); ++i ){
+      Q[i] = Q[i]*pow(X[i],2)*0.5;
+    }
+    A = INTG(X,Q);
+    TBAR += A;
 
-DO i=1,JS3
-  F=X(i)*0.5/T
-  CALL COTH(H,F)
-  Q(i) = Q(i)*H/X(i)
-ENDDO
-
-CALL INTG(X,Q,A,JS3)
-PC[0]=PC[0]+A
-
-DO i=1,JS3
-  Q(i) = Q(i)*X(i)**2*0.5
-ENDDO
-CALL INTG(X,Q,A,JS3)
-TBAR= TBAR + A
-
-DO i=1,NT
-  PC(i) = PC(i)*norm
-  PS(i) = PS(i)*norm
-ENDDO
-
-TBAR = TBAR*norm*AM/wgt
-
-END SUBROUTINE
-*/
+    for (size_t i = 0; i < t.size(); ++i ){
+      PC[i] = PC[i]*norm;
+      PS[i] = PS[i]*norm;
+    }
+    TBAR = TBAR*norm*AM/wgt;
+    return std::make_tuple(TBAR,PC,PS);
 }
 
 

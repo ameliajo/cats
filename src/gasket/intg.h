@@ -2,7 +2,7 @@
 #include <cmath>
 #include <range/v3/all.hpp>
 
-template <typename Range, typename Float>
+template <typename Range>
 auto INTG(Range X,Range Q){
 
   int i, N = X.size();

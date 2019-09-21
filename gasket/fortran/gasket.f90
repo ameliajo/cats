@@ -321,14 +321,14 @@ real(8) :: EPS(NE)
     SK(i)=0.0
     l=NMAX(2)*2+1
     DO j=1,l
-    write(*,*) j
+   ! write(*,*) j
       m=NMAX(1)*2+1
       ind2 = j-NMAX(2)-1
-      write(*,*) m,ind2
+     ! write(*,*) m,ind2
       DO k=1,m
         ind1 = k-NMAX(1)-1
-        write(*,*) ind1
-      return
+       ! write(*,*) ind1
+ !     return
         EIN = ABS(EPS(i)-ind1*X5(1)-ind2*X5(2))
         SINT = SZCON*EXP(-AM*(EIN**2+(PSQ*W1/AM)**2)/(4.*PSQ*temperature*W1))
         !if (SINT.GT.200) WRITE(*,*) SINT, ind1, ind2, ANK(2,ABS(ind2)+1), ANK(1,ABS(ind1)+1)
@@ -337,7 +337,7 @@ real(8) :: EPS(NE)
     ENDDO
     S2(i)=SK(i)
   ENDDO
-  write(*,103) S2
+ ! write(*,103) S2
 103 FORMAT('    ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ')
 END SUBROUTINE
 
@@ -492,6 +492,7 @@ U = Q(1)*X(1)/3.
 CALL INTG(X,Q,A,JS3)
 CALL INTG(X2,Q2,A2,5)
 90 FORMAT('    ',F12.5,', ',F12.5,', ',F12.5,', ',F12.5,', ',F12.5,', ')
+100 FORMAT('    ',ES12.6,', ',ES12.6,', ',ES12.6,', ',ES12.6,', ',ES12.6,', ')
 !write(*,90) X
 !write(*,90) Q
 norm = wgt / AM / (U+A)
