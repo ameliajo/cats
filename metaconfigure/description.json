@@ -579,7 +579,7 @@
   "header files": [
     "src/cats.h", 
     "src/gasket/gasket.h", 
-    "src/gasket/talkToPython.h", 
+    "src/gasket/inputOutput.h", 
     "src/gasket/gtg/gtg.h", 
     "src/gasket/gtg/helpers_gtg/acon2.h", 
     "src/gasket/gtg/helpers_gtg/bessl.h", 
@@ -609,7 +609,8 @@
       "src/test/cats.test.cpp"
     ], 
     "gasket": [
-      "src/gasket/test/gasket.test.cpp"
+      "src/gasket/test/gasket.test.cpp", 
+      "src/gasket/test/inputOutput.test.cpp"
     ], 
     "gasket.gtg": [
       "src/gasket/gtg/test/gtg.test.cpp"

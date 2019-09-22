@@ -22,5 +22,30 @@ beta
 
 ----
 
+oscEnergies
+0.205 0.480
+
+----
+
+oscWeights
+0.33333 0.66667
+
+----
+
 temperature
 296.0
+
+freeWgt
+0.0555556 
+
+continWgt 
+0.444444 
+
+oscWgt 
+0.5
+
+
+
+
+
+

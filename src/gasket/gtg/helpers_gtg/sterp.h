@@ -4,7 +4,6 @@
 
 template <typename Range, typename Float>
 auto sterp( Float B, Range betas, Range sLog ){
-  int NB = betas.size();
   Float SL;
 
   if      (B <= betas[0]             ){ return exp(sLog[0]); }

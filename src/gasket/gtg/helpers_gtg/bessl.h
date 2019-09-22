@@ -6,7 +6,7 @@ template <typename Float, typename Range>
 auto bessl( Float xVal, Range& B, int NX ){
   using std::log;
 
-  int IORD, i, j, NMAX;
+  int IORD, NMAX;
   Float TA, FNFACT, FACT, X2N, X2;
   Range BF(60);
   

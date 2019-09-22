@@ -11,7 +11,6 @@ template <typename Range, typename Float>
 auto gasket(Range X, Range Q, Range t, Range alphas, Range betas, Float T, 
   Float continWgt, Float freeGasWgt, Float oscWgt, Range oscEnergies, Range oscWgts){
   using std::exp; using std::pow; using std::sinh; using std::cosh;
-  std::cout << "Hello, world" << std::endl;
   Float AM = 1.0/1.0086654; // Convert mass to neutron mass unit
   Float APS, BPS, DBWP, DBW, PSQ, SZCON, RR, U, EX;
 

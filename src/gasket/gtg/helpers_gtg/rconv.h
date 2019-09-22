@@ -7,7 +7,7 @@ template <typename RangeInts, typename Float, typename Range>
 auto rconv( RangeInts nMax, Range X5, Range ANK, Float T, Range& S1, Range betas){
   using std::abs; using std::log;
 
-  int i, j, k, ind;
+  int ind;
   Float SINT, BETAIN;
   Range SLOG(1000), SK(1000);
 

@@ -7,9 +7,6 @@
 template <typename Range, typename Float>
 auto GTG(Float wgt, Float T, Float AM, Range X, Range Q, Range t ){
     using std::pow; using std::cosh; using std::sinh;
-    int JS3 = X.size();
-    int NT = t.size();
-    int i;
 
 //SUBROUTINE GTG(wgt,T,AM,X,Q,t,PC,PS,JS3,NT,TBAR)
 
