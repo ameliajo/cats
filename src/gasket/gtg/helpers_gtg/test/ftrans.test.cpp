@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "../ftrans.h"
-#include "../../generalTools/testing.h"
+#include "../../../../generalTools/testing.h"
 
 
 TEST_CASE( "ftrans" ){

@@ -20,9 +20,9 @@ INTEGER :: NMAX(2), NPTS
 
 NT = 1400  !number of time steps
 NT = 80
-NE = 100   ! nbeta
+NE = 15   ! nbeta
 tstep = 0.1  !time step size
-NPTS = 100 ! nalphas
+NPTS = 15 ! nalphas
 
 JS3 = 67  !number of points in continuous phonon spectrum
 JS4 = 0
@@ -212,6 +212,11 @@ ENDDO
 ALLOCATE(GC(NT),GS(NT))
 
 CALL GTG(W3,temperature,AM,X,Q,t,GC,GS,JS3,NT,TBAR)
+!write(*,*) 
+!write(*,100) GC
+!write(*,*) 
+!write(*,100) GS
+!write(*,*) 
 
 ALLOCATE(S1(NE),S2(NE),S(NE))
 
@@ -259,42 +264,30 @@ DO ialpha=1,NPTS
     S2(i) = SZCON*EXP(-AM*(EPS(i)**2+(PSQ*W1/AM)**2)/(4.*PSQ*temperature*W1))
     S(i) = S1(i)+S2(i)
   ENDDO
-
   DO i=1,JS5
     RR = 0.5*X5(i)/temperature
     U=EXP(RR)
     U=0.5*(U-1./U)
     ARG1(i)=W5*Q5(i)/(AM*X5(i)*U)
     ARG2(i)=W5*Q5(i)/(AM*X5(i)*TANH(RR))
-    !write(*,*)"---------------------------------------------"
-    !write(*,*) ARG1(i)*PSQ, NMAX(i)
-    !write(*,100) BF
-    !write(*,*) 
-    !ARG1(i)=0.05
-    !PSQ = 1.0
     CALL BESSL(ARG1(i)*PSQ,BF,10, NMAX(i)) !10 first moments of modified Bessel fct of first kind (I_n)
-    !write(*,*) "NMAX",NMAX(i)
-    !write(*,100) BF
-    !if (i.eq.2) return
     EX = EXP(-PSQ*ARG2(i))
     DO j=1,10
       ANK(i,j)=BF(j)*EX
     ENDDO
+    
   ENDDO
-
-  !write(*,80) BETA
   CALL RCONV(NE,JS5, NMAX,X5,ANK,temperature,S1,BETA)
-  !return
 
-  !write(*,103) S2
-  !write(*,*) 
   CALL ACON2(NE,NMAX,X5,ANK, temperature, SZCON, EPS, AM, W1, PSQ, S2)
-  return
 103 FORMAT('    ',ES10.4,', ',ES10.4,', ',ES10.4,', ',ES10.4,', ',ES10.4,', ')
   
   DO i=1,NE
     S(i) = S1(i)+S2(i)
   ENDDO
+  write(*,103) S
+  write(*,*)
+  
   
   WRITE(10,100) S
 

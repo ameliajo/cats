@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include <range/v3/all.hpp>
-#include "intg.h"
-#include "ftrans.h"
+#include "helpers_gtg/intg.h"
+#include "helpers_gtg/ftrans.h"
 
 template <typename Range, typename Float>
 auto GTG(Float wgt, Float T, Float AM, Range X, Range Q, Range t ){

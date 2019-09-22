@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "../scint.h"
-#include "../../generalTools/testing.h"
+#include "../../../../generalTools/testing.h"
 
 
 TEST_CASE( "scint" ){

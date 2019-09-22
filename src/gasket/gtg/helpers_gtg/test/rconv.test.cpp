@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "../rconv.h"
-#include "../../generalTools/testing.h"
+#include "../../../../generalTools/testing.h"
 
 
 TEST_CASE( "rconv" ){

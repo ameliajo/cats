@@ -8,8 +8,8 @@ if ( NOT GIT_EXECUTABLE )
         message( FATAL_ERROR "git installation was not found." )
     endif()
 endif()
-set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_STANDARD 17)
 if( NOT ROOT_DIRECTORY )
     set( ROOT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
     if ( NOT fetched_subprojects )
@@ -266,14 +266,15 @@ message( STATUS "-----------------------------------------------------------" )
 
 add_library( cats INTERFACE )
 target_sources( cats INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/cats.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/acon2.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/bessl.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/ftrans.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/intg.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/rconv.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/scint.h"
-             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/sterp.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gasket.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/gtg.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/acon2.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/bessl.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/ftrans.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/intg.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/rconv.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/scint.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/sterp.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/generalTools/testing.h" )
 
 target_include_directories( cats INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/src src/include )
@@ -287,7 +288,9 @@ target_link_libraries( cats INTERFACE catch-adapter INTERFACE range-v3-adapter )
 if( NOT is_subproject )
     enable_testing() 
     if ( unit_tests )
+        add_subdirectory( src/gasket/gtg/test )
         add_subdirectory( src/test )
+        add_subdirectory( src/gasket/gtg/helpers_gtg/test )
         add_subdirectory( src/gasket/test )
     endif() 
 endif()

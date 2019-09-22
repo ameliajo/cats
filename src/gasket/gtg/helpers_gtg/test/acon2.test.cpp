@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "../acon2.h"
-#include "../../generalTools/testing.h"
+#include "../../../../generalTools/testing.h"
 
 
 TEST_CASE( "acon2" ){

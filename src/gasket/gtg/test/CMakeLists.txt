@@ -1,6 +1,6 @@
 
-add_executable( gasket.test gasket.test.cpp )
-target_compile_options( gasket.test PRIVATE ${${PREFIX}_common_flags}
+add_executable( gasket.gtg.test gtg.test.cpp )
+target_compile_options( gasket.gtg.test PRIVATE ${${PREFIX}_common_flags}
 $<$<BOOL:${strict}>:${${PREFIX}_strict_flags}>$<$<CONFIG:DEBUG>:
 ${${PREFIX}_DEBUG_flags}
 $<$<BOOL:${coverage}>:${${PREFIX}_coverage_flags}>>
@@ -10,5 +10,5 @@ $<$<BOOL:${link_time_optimization}>:${${PREFIX}_link_time_optimization_flags}>
 $<$<BOOL:${nonportable_optimization}>:${${PREFIX}_nonportable_optimization_flags}>>
 
 ${CXX_appended_flags} ${cats_appended_flags} )
-target_link_libraries( gasket.test PUBLIC cats ) 
-add_test( NAME gasket COMMAND gasket.test )
+target_link_libraries( gasket.gtg.test PUBLIC cats ) 
+add_test( NAME gasket.gtg COMMAND gasket.gtg.test )
