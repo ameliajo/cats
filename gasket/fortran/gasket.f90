@@ -207,16 +207,12 @@ DO i=2,NT
      t(i) = t(i-1)+tstep
   END IF
 ENDDO
+write(*,81)Q
 
 
 ALLOCATE(GC(NT),GS(NT))
 
 CALL GTG(W3,temperature,AM,X,Q,t,GC,GS,JS3,NT,TBAR)
-!write(*,*) 
-!write(*,100) GC
-!write(*,*) 
-!write(*,100) GS
-!write(*,*) 
 
 ALLOCATE(S1(NE),S2(NE),S(NE))
 
@@ -281,17 +277,20 @@ DO ialpha=1,NPTS
 
   CALL ACON2(NE,NMAX,X5,ANK, temperature, SZCON, EPS, AM, W1, PSQ, S2)
 103 FORMAT('    ',ES10.4,', ',ES10.4,', ',ES10.4,', ',ES10.4,', ',ES10.4,', ')
+136 FORMAT('    ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ',ES13.6,', ')
   
   DO i=1,NE
     S(i) = S1(i)+S2(i)
   ENDDO
-  write(*,103) S
-  write(*,*)
+ ! write(*,136) S
+ ! write(*,*)
+  !if (ialpha.eq.2) return
   
   
   WRITE(10,100) S
 
 END DO
+81 FORMAT('    ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ',F7.5,', ')
 
 CLOSE(10)
 

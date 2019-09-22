@@ -267,6 +267,7 @@ message( STATUS "-----------------------------------------------------------" )
 add_library( cats INTERFACE )
 target_sources( cats INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src/cats.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gasket.h"
+             "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/talkToPython.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/gtg.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/acon2.h"
              "${CMAKE_CURRENT_SOURCE_DIR}/src/gasket/gtg/helpers_gtg/bessl.h"
