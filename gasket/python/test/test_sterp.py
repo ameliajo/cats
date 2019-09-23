@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append('../')
 from sterp import *
  
 class Test_STERP(unittest.TestCase):

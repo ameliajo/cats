@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append('../')
 from ftrans import *
  
 class Test_FTRANS(unittest.TestCase):

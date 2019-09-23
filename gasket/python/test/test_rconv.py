@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append('../')
 from rconv import *
  
 class Test_RCONV(unittest.TestCase):

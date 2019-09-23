@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append('../')
 from scint import *
  
 class Test_SCINT(unittest.TestCase):
