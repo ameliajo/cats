@@ -13,7 +13,11 @@ def gasket(X, Q, t, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
     S1 = [0.0]*len(betas)
     S2 = [0.0]*len(betas)
     S  = [0.0]*len(betas)
-    #ANK(oscEnergies.size()*10), ARG1(2), ARG2(2), BF(10), NMAX(2);
+    ANK = [0.0]*(len(oscEnergies)*10)
+    ARG1 = [0.0,0.0]
+    ARG2 = [0.0,0.0]
+    BF = [0.0]*10
+    NMAX = [0.0]*2
     EPS = [beta*T for beta in betas]
     sab = [0.0]*(len(alphas)*len(betas))
 
@@ -24,7 +28,7 @@ def gasket(X, Q, t, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
         BPS = PSQ
         DBWP = DBW/3.1416
 
-        S1 = scint(t,GC,GS,EPS,T,APS,BPS,DBWP);
+        S1 = SCINT(t,GC,GS,EPS,T,APS,BPS,DBWP);
 
         SZCON = DBW*sqrt(AM/(12.566371*PSQ*freeGasWgt*T));
         for i in range(len(betas)):
@@ -41,10 +45,10 @@ def gasket(X, Q, t, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
             NMAX[i] = bessl(ARG1[i]*PSQ,BF,10);
             EX = exp(-PSQ*ARG2[i]);
             for j in range(10):
-                ANK[i+j*oscEnergies.size()] = BF[j]*EX;
+                ANK[i+j*len(oscEnergies)] = BF[j]*EX;
         rconv( NMAX, oscEnergies, ANK, T, S1, betas );
         acon2( NMAX, oscEnergies, ANK, T, SZCON, EPS, AM, freeGasWgt, PSQ, S2 );
         for i in range(len(betas)):
             S[i] = S1[i] + S2[i];
-            sab[i+a*betas.size()] = S[i];
+            sab[i+a*len(betas)] = S[i];
     return sab;
