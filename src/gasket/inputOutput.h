@@ -33,24 +33,23 @@ bool readIntoValue(InputFile& inputFile, String dataName, Float& value){
 
 int inputOutput() {
 
-  std::ifstream inputFile("/Users/ameliajo/cats/src/gasket/numbers.txt");
+  std::ifstream inputFile("/Users/ameliajo/cats/src/gasket/input.txt");
   if(!inputFile) { std::cout << "Cannot open input inputFile.\n"; return 1; }
 
   std::string inStr;
   std::vector<double> rhoGrid, rho, alphas, betas, oscEnergies, oscWeights;
   double T, freeGasWgt, continWgt, oscWgt;
 
-  if (not readIntoVector(inputFile, "rhoGrid", rhoGrid)){ return 1; }
-  if (not readIntoVector(inputFile, "rhoValues", rho)){ return 1; }
-  if (not readIntoVector(inputFile, "alpha", alphas)){ return 1; }
-  if (not readIntoVector(inputFile, "beta", betas)){ return 1; }
+  if (not readIntoVector(inputFile, "rhoGrid",     rhoGrid    )){ return 1; }
+  if (not readIntoVector(inputFile, "rhoValues",   rho        )){ return 1; }
+  if (not readIntoVector(inputFile, "alpha",       alphas     )){ return 1; }
+  if (not readIntoVector(inputFile, "beta",        betas      )){ return 1; }
   if (not readIntoVector(inputFile, "oscEnergies", oscEnergies)){ return 1; }
-  if (not readIntoVector(inputFile, "oscWeights", oscWeights)){ return 1; }
-
-  if (not readIntoValue(inputFile, "temperature", T)){ return 1; }
-  if (not readIntoValue(inputFile, "freeWgt", freeGasWgt)){ return 1; }
-  if (not readIntoValue(inputFile, "continWgt", continWgt)){ return 1; }
-  if (not readIntoValue(inputFile, "oscWgt", oscWgt)){ return 1; }
+  if (not readIntoVector(inputFile, "oscWeights",  oscWeights )){ return 1; }
+  if (not readIntoValue(inputFile, "temperature",  T          )){ return 1; }
+  if (not readIntoValue(inputFile, "freeWgt",      freeGasWgt )){ return 1; }
+  if (not readIntoValue(inputFile, "continWgt",    continWgt  )){ return 1; }
+  if (not readIntoValue(inputFile, "oscWgt",       oscWgt     )){ return 1; }
 
   inputFile.close();
 
@@ -62,7 +61,10 @@ int inputOutput() {
   std::cout << "all good!" << std::endl;
   std::cout << std::endl;
 
-  //gasket(rhoGrid, rho, 
+  std::vector<double> sab = gasket(rhoGrid, rho, t, alphas, betas, T, continWgt, 
+                                   freeGasWgt, oscWgt, oscEnergies, oscWeights);
+  std::cout << (sab|ranges::view::all) << std::endl;
+
 
 
 

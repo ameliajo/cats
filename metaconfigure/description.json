@@ -580,14 +580,14 @@
     "src/cats.h", 
     "src/gasket/gasket.h", 
     "src/gasket/inputOutput.h", 
-    "src/gasket/gtg/gtg.h", 
-    "src/gasket/gtg/helpers_gtg/acon2.h", 
-    "src/gasket/gtg/helpers_gtg/bessl.h", 
-    "src/gasket/gtg/helpers_gtg/ftrans.h", 
-    "src/gasket/gtg/helpers_gtg/intg.h", 
-    "src/gasket/gtg/helpers_gtg/rconv.h", 
-    "src/gasket/gtg/helpers_gtg/scint.h", 
-    "src/gasket/gtg/helpers_gtg/sterp.h", 
+    "src/gasket/helperFiles/acon2.h", 
+    "src/gasket/helperFiles/bessl.h", 
+    "src/gasket/helperFiles/ftrans.h", 
+    "src/gasket/helperFiles/gtg.h", 
+    "src/gasket/helperFiles/intg.h", 
+    "src/gasket/helperFiles/rconv.h", 
+    "src/gasket/helperFiles/scint.h", 
+    "src/gasket/helperFiles/sterp.h", 
     "src/generalTools/testing.h"
   ], 
   "ignore pattern": "$^", 
@@ -612,16 +612,14 @@
       "src/gasket/test/gasket.test.cpp", 
       "src/gasket/test/inputOutput.test.cpp"
     ], 
-    "gasket.gtg": [
-      "src/gasket/gtg/test/gtg.test.cpp"
-    ], 
-    "gasket.gtg.helpers_gtg": [
-      "src/gasket/gtg/helpers_gtg/test/acon2.test.cpp", 
-      "src/gasket/gtg/helpers_gtg/test/bessl.test.cpp", 
-      "src/gasket/gtg/helpers_gtg/test/ftrans.test.cpp", 
-      "src/gasket/gtg/helpers_gtg/test/rconv.test.cpp", 
-      "src/gasket/gtg/helpers_gtg/test/scint.test.cpp", 
-      "src/gasket/gtg/helpers_gtg/test/sterp.test.cpp"
+    "gasket.helperFiles": [
+      "src/gasket/helperFiles/test/acon2.test.cpp", 
+      "src/gasket/helperFiles/test/bessl.test.cpp", 
+      "src/gasket/helperFiles/test/ftrans.test.cpp", 
+      "src/gasket/helperFiles/test/gtg.test.cpp", 
+      "src/gasket/helperFiles/test/rconv.test.cpp", 
+      "src/gasket/helperFiles/test/scint.test.cpp", 
+      "src/gasket/helperFiles/test/sterp.test.cpp"
     ]
   }, 
   "update": true

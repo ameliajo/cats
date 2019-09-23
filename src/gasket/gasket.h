@@ -1,11 +1,11 @@
 #include <iostream>
 #include <cmath>
 #include <range/v3/all.hpp>
-#include "gtg/gtg.h"
-#include "gtg/helpers_gtg/scint.h"
-#include "gtg/helpers_gtg/bessl.h"
-#include "gtg/helpers_gtg/rconv.h"
-#include "gtg/helpers_gtg/acon2.h"
+#include "helperFiles/gtg.h"
+#include "helperFiles/scint.h"
+#include "helperFiles/bessl.h"
+#include "helperFiles/rconv.h"
+#include "helperFiles/acon2.h"
 
 template <typename Range, typename Float>
 auto gasket(Range X, Range Q, Range t, Range alphas, Range betas, Float T, 
