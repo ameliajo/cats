@@ -27,7 +27,7 @@ class Test_GASKT(unittest.TestCase):
         continWgt = 0.4444444
         oscWgt = 0.5
         T = 0.0255
-        sab = gasket(X,Q,t,alphas,betas,T,continWgt,freeGasWgt,oscWgt,X5,Q5)
+        sab, GC, GS = gasket(X,Q,t,alphas,betas,T,continWgt,freeGasWgt,oscWgt,X5,Q5)
         correctSAB = [ 144.2350, 108.1537, 45.61302, 10.84460, 1.485720, \
         0.1538348, 4.898045E-2, 4.287713E-2, 4.115125E-2, 3.958769E-2, \
         3.808157E-2, 3.662962E-2, 3.523001E-2, 3.388099E-2, 4.404215E-23, \

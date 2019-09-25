@@ -2,7 +2,7 @@ import numpy as np
 from numpy import sin,cos,exp,sinh,cosh,sqrt
 import time
 
-def SCINT( t, GC, GS, EPS, T, A, B, F):
+def SCINT( t, GC, GS, EPS, T, A, B, DBWP):
     S = [0.0]*len(EPS)
 
     EX1 = exp(B*GC[0]);
@@ -41,7 +41,7 @@ def SCINT( t, GC, GS, EPS, T, A, B, F):
             V0 = V;
             Q1 = Q2;
             R1 = R2;
-        S[i] *= F/AL;
+        S[i] *= DBWP/AL;
     #end = time.time()
     #print("-----",end-start)
     return S;

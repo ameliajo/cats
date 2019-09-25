@@ -6,10 +6,13 @@ from bessl import *
 from rconv import *
 from acon2 import *
 
-def gasket(X, Q, t, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
+def gasket(X, Q, time, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
            oscEnergies, oscWgts):
     AM = 1.0/1.0086654; # Convert mass to neutron mass unit
-    tbar, GC, GS = GTG( continWgt, T, AM, X, Q, t )
+    F = [X[i]*0.5/T for i in range(len(X))]
+    H = [cosh(Fval)/sinh(Fval) for Fval in F]
+    print("num timesteps = ",len(time),".    dt = ",time[1]-time[0])
+    tbar, GC, GS = GTG( continWgt, T, AM, X, Q, time, H, F[0] )
     S1 = [0.0]*len(betas)
     S2 = [0.0]*len(betas)
     S  = [0.0]*len(betas)
@@ -22,19 +25,19 @@ def gasket(X, Q, t, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
     sab = [0.0]*(len(alphas)*len(betas))
 
     for a in range(len(alphas)):
+        print("doing alpha # ",a," out of ",len(alphas))
         PSQ = alphas[a]*AM*T
         DBW = exp(-PSQ*GC[0])
         APS = PSQ*freeGasWgt/AM
         BPS = PSQ
         DBWP = DBW/3.1416
 
-        S1 = SCINT(t,GC,GS,EPS,T,APS,BPS,DBWP);
+        S1 = SCINT(time,GC,GS,EPS,T,APS,BPS,DBWP);
 
         SZCON = DBW*sqrt(AM/(12.566371*PSQ*freeGasWgt*T));
         for i in range(len(betas)):
             S1[i]= S1[i]/exp(betas[i]/2);
             S2[i] = SZCON*exp(-AM*((EPS[i]**2) + (PSQ*freeGasWgt/AM)**2)/(4.*PSQ*T*freeGasWgt));
-            S[i] = S1[i]+S2[i];
 
         for i in range(len(oscEnergies)):
             RR = 0.5*oscEnergies[i]/T;
@@ -49,6 +52,5 @@ def gasket(X, Q, t, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
         rconv( NMAX, oscEnergies, ANK, T, S1, betas );
         acon2( NMAX, oscEnergies, ANK, T, SZCON, EPS, AM, freeGasWgt, PSQ, S2 );
         for i in range(len(betas)):
-            S[i] = S1[i] + S2[i];
-            sab[i+a*len(betas)] = S[i];
-    return sab;
+            sab[i+a*len(betas)] = S1[i] + S2[i]
+    return sab, GC, GS

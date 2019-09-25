@@ -1,4 +1,5 @@
 import unittest
+from numpy import sin,cos,exp,sinh,cosh,sqrt
 import sys
 sys.path.append('../')
 from gtg import *
@@ -53,7 +54,9 @@ class Test_GTG(unittest.TestCase):
         2.762721, 2.798704, 2.834433, 2.869907, 2.905122, 2.940075, 2.974763, \
         3.009185, 3.043336, 3.077215, 3.110819, 3.144144, 3.177190, 3.209952]
 
-        tbar, PC, PS = GTG( wgt, T, AM, X, Q, t )
+        F = [X[i]*0.5/T for i in range(len(X))]
+        H = [cosh(Fval)/sinh(Fval) for Fval in F]
+        tbar, PC, PS = GTG( wgt, T, AM, X, Q, t, H, F[0] )
 
         np.testing.assert_almost_equal(tbar,4.9117341E-2,6)
         np.testing.assert_almost_equal(PC,correctPC,5)
