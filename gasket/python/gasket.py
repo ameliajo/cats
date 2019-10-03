@@ -6,51 +6,59 @@ from bessl import *
 from rconv import *
 from acon2 import *
 
-def gasket(X, Q, time, alphas, betas, T, continWgt, freeGasWgt, oscWgt, \
-           oscEnergies, oscWgts):
+def gasket(rhoX, rhoY, time, alphas, betas, T, continWgt, freeGasWgt, oscWgt, oscEnergies, oscWgts):
+    oscWgts = [oscWgt*oscWgtsVal for oscWgtsVal in oscWgts]
     AM = 1.0/1.0086654; # Convert mass to neutron mass unit
-    F = [X[i]*0.5/T for i in range(len(X))]
-    H = [cosh(Fval)/sinh(Fval) for Fval in F]
+    invT = 1.0/T
+    rhoBetas = [rhoX_val*invT for rhoX_val in rhoX]
     print("num timesteps = ",len(time),".    dt = ",time[1]-time[0])
-    tbar, GC, GS = GTG( continWgt, T, AM, X, Q, time, H, F[0] )
-    S1 = [0.0]*len(betas)
-    S2 = [0.0]*len(betas)
-    S  = [0.0]*len(betas)
+    tbar, H, F = GTG( continWgt, T, AM, rhoX, rhoY, time )
+    S2, S = [0.0]*len(betas), [0.0]*len(betas)
     ANK = [0.0]*(len(oscEnergies)*10)
-    ARG1 = [0.0,0.0]
+    ARG1, ARG2 = [0.0,0.0], [0.0,0.0]
     ARG2 = [0.0,0.0]
     BF = [0.0]*10
     NMAX = [0.0]*2
-    EPS = [beta*T for beta in betas]
+    epsilon = [beta*T for beta in betas]
     sab = [0.0]*(len(alphas)*len(betas))
 
     for a in range(len(alphas)):
         print("doing alpha # ",a," out of ",len(alphas))
         PSQ = alphas[a]*AM*T
-        DBW = exp(-PSQ*GC[0])
-        APS = PSQ*freeGasWgt/AM
-        BPS = PSQ
-        DBWP = DBW/3.1416
+        DBW = exp(-PSQ*H[0])
 
-        S1 = SCINT(time,GC,GS,EPS,T,APS,BPS,DBWP);
+        APS = alphas[a]*T*freeGasWgt
+        BPS = alphas[a]*T*AM
+
+        S1 = SCINT(time,H,F,epsilon,T,APS,BPS,DBW);
+        numZeroVals = 0
+        numNegVals = 0
+        for val in S1:
+            if val < 0.0:
+                numNegVals += 1
+            if val == 0.0:
+                numZeroVals += 1
+        if numZeroVals + numNegVals > 0:
+            print("Got",numNegVals," negative values, and ",numZeroVals," zero values.")
 
         SZCON = DBW*sqrt(AM/(12.566371*PSQ*freeGasWgt*T));
         for i in range(len(betas)):
-            S1[i]= S1[i]/exp(betas[i]/2);
-            S2[i] = SZCON*exp(-AM*((EPS[i]**2) + (PSQ*freeGasWgt/AM)**2)/(4.*PSQ*T*freeGasWgt));
+            S1[i]*= exp(-betas[i]*0.5);
+            S2[i] = SZCON*exp(-AM*((epsilon[i]**2) + \
+                    (PSQ*freeGasWgt/AM)**2)/(4.*PSQ*T*freeGasWgt));
 
         for i in range(len(oscEnergies)):
-            RR = 0.5*oscEnergies[i]/T;
+            RR = 0.5*oscEnergies[i]*invT;
             U  = exp(RR);
             U  = 0.5*(U-1.0/U);
-            ARG1[i] = oscWgt*oscWgts[i]/(AM*oscEnergies[i]*U);
-            ARG2[i] = oscWgt*oscWgts[i]/(AM*oscEnergies[i]*sinh(RR)/cosh(RR));
+            ARG1[i] = oscWgts[i]/(AM*oscEnergies[i]*U);
+            ARG2[i] = oscWgts[i]/(AM*oscEnergies[i]*sinh(RR)/cosh(RR));
             NMAX[i] = bessl(ARG1[i]*PSQ,BF,10);
             EX = exp(-PSQ*ARG2[i]);
             for j in range(10):
                 ANK[i+j*len(oscEnergies)] = BF[j]*EX;
         rconv( NMAX, oscEnergies, ANK, T, S1, betas );
-        acon2( NMAX, oscEnergies, ANK, T, SZCON, EPS, AM, freeGasWgt, PSQ, S2 );
+        acon2( NMAX, oscEnergies, ANK, T, SZCON, epsilon, AM, freeGasWgt, PSQ, S2 );
         for i in range(len(betas)):
             sab[i+a*len(betas)] = S1[i] + S2[i]
-    return sab, GC, GS
+    return sab, H, F

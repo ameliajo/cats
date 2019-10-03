@@ -54,9 +54,9 @@ class Test_GTG(unittest.TestCase):
         2.762721, 2.798704, 2.834433, 2.869907, 2.905122, 2.940075, 2.974763, \
         3.009185, 3.043336, 3.077215, 3.110819, 3.144144, 3.177190, 3.209952]
 
-        F = [X[i]*0.5/T for i in range(len(X))]
-        H = [cosh(Fval)/sinh(Fval) for Fval in F]
-        tbar, PC, PS = GTG( wgt, T, AM, X, Q, t, H, F[0] )
+        rhoBetas = [rhoX_val/T for rhoX_val in X]
+        coth = [cosh(beta*0.5)/sinh(beta*0.5) for beta in rhoBetas]
+        tbar, PC, PS = GTG( wgt, T, AM, X, Q, t )
 
         np.testing.assert_almost_equal(tbar,4.9117341E-2,6)
         np.testing.assert_almost_equal(PC,correctPC,5)

@@ -2,16 +2,16 @@ import numpy as np
 from numpy import sin,cos,exp,sinh,cosh,sqrt
 from ftrans import *
 
-
-def GTG(wgt, T, AM, X, Q, t, H, F0 ):
+def GTG(wgt, T, AM, X, Q, t ):
+    invT = 1.0/T
+    rhoBetas = [rhoX_val*invT for rhoX_val in X]
+    coth = [cosh(beta*0.5)/sinh(beta*0.5) for beta in rhoBetas]
 
     U = Q[0]*X[0]/3.0
-    # puts integral result in variable A -- JS3 is the length of X and Q
-    # INTG(X,Q,A,JS3);
     A = np.trapz(Q,X)
 
     norm = wgt / AM / (U+A)
-    PC, PS = ftrans(T, X, Q, t, H)
+    H, F = ftrans(T, X, Q, t, coth)
 
     for i in range(1,len(t)):
         U = X[0]*t[i];
@@ -25,17 +25,18 @@ def GTG(wgt, T, AM, X, Q, t, H, F0 ):
             invU = 1.0/U;
             CS = S*invU*invU - C*invU;
             C = (1.-C)*invU;
-        PC[i] += Q[0]/U*(H[0]*(S-C)+C/F0);
-        PS[i] += Q[0]*CS;
+        H[i] += Q[0]/U*(coth[0]*(S-C)+C/(rhoBetas[0]*0.5));
+        F[i] += Q[0]*CS;
+
     # Putting in the t=0 terms
-    PC[0] = 0.5*Q[0]*(1./F0+H[0]);
-    PS[0] = 0.0;
+    H[0] = 0.5*Q[0]*(1./(rhoBetas[0]*0.5)+coth[0]);
+    F[0] = 0.0;
     TBAR = Q[0]*T*X[0]/3.0;
 
     for i in range(len(X)):
-        Q[i] = Q[i]*H[i]/X[i];
+        Q[i] = Q[i]*coth[i]/X[i];
     A = np.trapz(Q,X)
-    PC[0]=PC[0]+A;
+    H[0]=H[0]+A;
     for i in range(len(X)):
       Q[i] = Q[i]*(X[i]**2)*0.5;
 
@@ -43,10 +44,10 @@ def GTG(wgt, T, AM, X, Q, t, H, F0 ):
     TBAR += A;
 
     for i in range(len(t)):
-      PC[i] = PC[i]*norm;
-      PS[i] = PS[i]*norm;
+      H[i] = H[i]*norm;
+      F[i] = F[i]*norm;
 
     TBAR = TBAR*norm*AM/wgt;
-    return TBAR,PC,PS
+    return TBAR,H,F
 
 
