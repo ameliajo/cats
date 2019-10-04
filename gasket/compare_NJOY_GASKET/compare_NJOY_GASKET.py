@@ -6,6 +6,7 @@ from numpy import sin, cos, exp, sinh, cosh
 import sys
 sys.path.append("NJOY/")
 sys.path.append("GASKET/")
+sys.path.append("SIMPLE_GASKET/")
 
 
 def prepPlot(vector):
@@ -28,7 +29,7 @@ def checkThatAlphasBetasMatch(alphas2,betas2,alphas1,betas1):
 
 
 def doThePlotting(alphas,betas,sab,linestyle,scalarMap):
-    for a in range(1,len(alphas)):
+    for a in range(len(alphas)):
         plt.plot(betas[:-2],[sab[b+a*len(betas)] for b in range(len(betas)-2)],\
                  color=scalarMap.to_rgba(a),linewidth=2,linestyle=linestyle)
 
@@ -54,7 +55,17 @@ def getValuesFromInput(name):
         num_t  = importMod(fName).num_t;  delta_t = importMod(fName).delta_t 
         H      = importMod(fName).H    ;  F       = importMod(fName).F
         name   = importMod(fName).name
-        sab    = [temp*val for val in sab]
+        sab    = [temp*val for val in sab] 
+        H, F   = [x*temp for x in H], [x*temp for x in F]
+        return temp,alphas,betas,sab,num_t,delta_t,H,F,name
+
+    elif name[0] == 's':
+        fName = 'simple_gasket_output_'+name[1]
+        alphas = importMod(fName).alphas; betas   = importMod(fName).betas
+        temp   = importMod(fName).temp;   sab     = importMod(fName).sab
+        num_t  = importMod(fName).num_t;  delta_t = importMod(fName).delta_t 
+        H      = importMod(fName).H    ;  F       = importMod(fName).F
+        name   = importMod(fName).name
         H, F   = [x*temp for x in H], [x*temp for x in F]
         return temp,alphas,betas,sab,num_t,delta_t,H,F,name
 
@@ -69,8 +80,6 @@ def getValuesFromInput(name):
 
 
 
-
-
 if __name__=='__main__':
     from importlib import import_module as importMod
     fig = plt.figure(num=None,figsize=(10,6),dpi=120,facecolor='w',edgecolor='k') 
@@ -80,7 +89,7 @@ if __name__=='__main__':
     option = 0 # Here, I'm just plotting a simple F and H across time 
     #option = 1 # Here, we look at how time step things affect the H and F functions
     #           # from pg 37 in the GASKET manual
-    option = 2 # Here, we look at a few different sab datasets and see how the 
+    #option = 2 # Here, we look at a few different sab datasets and see how the 
                # timestep sizes affect them. These should all be GASKET inputs
     option = 3 # Here, we plot one or more S(a,b) against beta for various alphas
     #option = 4 # % difference betwen two S(a,b) grids, plotted against beta for
@@ -94,7 +103,7 @@ if __name__=='__main__':
         invArea = 1.0/np.trapz(H,time); H = [val*invArea for val in H]
         invArea = 1.0/np.trapz(F,time); F = [val*invArea for val in F]
         scalarMap, colorBar = prepPlot(list(range(7))); plt.clf(); 
-        plt.fill_between(time[1:],H[1:],linewidth=2,color=scalarMap.to_rgba(0),\
+        plt.fill_between(time,H,linewidth=2,color=scalarMap.to_rgba(0),\
                          label='H(t)',alpha=0.5)
         plt.fill_between(time,F,linewidth=2,color=scalarMap.to_rgba(3),\
                          label='F(t)',alpha=0.5)
@@ -110,7 +119,7 @@ if __name__=='__main__':
         tSpacings = []; maxVal = 0.0
         scalarMap, colorBar = prepPlot(list(range(len(sys.argv)))); plt.clf();
         for i,name in enumerate(sys.argv[1:]):
-            T,alphas,betas,sab,nt,dt,H,F = getValuesFromInput(name)
+            T,alphas,betas,sab,nt,dt,H,F,title = getValuesFromInput(name)
             if max(max(H),max(F)) > maxVal: maxVal = max(max(H),max(F))
             time = [i*dt for i in range(nt)]
             tSpacings.append(dt)
@@ -149,16 +158,17 @@ if __name__=='__main__':
 
             if i == 0:
                 scalarMap, colorBar = prepPlot(alphas); plt.clf()
-                colorList = [colors.rgb2hex(scalarMap.to_rgba(i)) for i in range(1,len(alphas))]
+                colorList = [colors.rgb2hex(scalarMap.to_rgba(i)) for i in range(len(alphas))]
                 mymap = colors.ListedColormap(colorList)
-                colorBar = plt.contourf([[0,0],[0,0]], list(range(1,len(alphas)+1)), cmap=mymap)
+                colorBar = plt.contourf([[0,0],[0,0]], list(range(len(alphas)+1)), cmap=mymap)
                 plt.clf()
                 cbar = plt.colorbar(colorBar)
                 cbar.ax.get_yaxis().set_ticks([])
                 plt.rcParams.update({'font.size': 14})
-                for j, lab in enumerate(["    "+str(a) for a in alphas[1:]]):
+                for j, lab in enumerate(["    "+str(a) for a in alphas[:]]):
                     #cbar.ax.text(1.7, (2 * j + 1) / 14.0, lab, ha='center', va='center')
-                    cbar.ax.text(1.7, (2 * j + 1) / 8.0, lab, ha='center', va='center')
+                    #cbar.ax.text(1.7, (2 * j + 1) / 8.0, lab, ha='center', va='center')
+                    cbar.ax.text(1.7, (2 * j + 1) / 10.0, lab, ha='center', va='center')
                 cbar.ax.get_yaxis().labelpad = 50
                 cbar.ax.set_ylabel('alpha')
 
@@ -166,6 +176,7 @@ if __name__=='__main__':
                 checkThatAlphasBetasMatch(alphasOld,betasOld,alphas,betas)
             alphasOld, betasOld = alphas[:], betas[:]
             doThePlotting(alphas,betas,sab,patterns[i],scalarMap)
+        #plt.legend(loc='best')
         plt.xlabel('beta'); plt.ylabel('S(a,b)'); 
         plt.title('S(a,b) for '+name+' at '+str(int(T/8.617e-5))+'K (NJOY vs. GASKET)')
         plt.yscale('log')

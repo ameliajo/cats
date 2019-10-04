@@ -31,15 +31,7 @@ def gasket(rhoX, rhoY, time, alphas, betas, T, continWgt, freeGasWgt, oscWgt, os
         BPS = alphas[a]*T*AM
 
         S1 = SCINT(time,H,F,epsilon,T,APS,BPS,DBW);
-        numZeroVals = 0
-        numNegVals = 0
-        for val in S1:
-            if val < 0.0:
-                numNegVals += 1
-            if val == 0.0:
-                numZeroVals += 1
-        if numZeroVals + numNegVals > 0:
-            print("Got",numNegVals," negative values, and ",numZeroVals," zero values.")
+        print("Got",len(list(filter(lambda x: x < 0, S1)))," negative values")
 
         SZCON = DBW*sqrt(AM/(12.566371*PSQ*freeGasWgt*T));
         for i in range(len(betas)):
@@ -60,5 +52,6 @@ def gasket(rhoX, rhoY, time, alphas, betas, T, continWgt, freeGasWgt, oscWgt, os
         rconv( NMAX, oscEnergies, ANK, T, S1, betas );
         acon2( NMAX, oscEnergies, ANK, T, SZCON, epsilon, AM, freeGasWgt, PSQ, S2 );
         for i in range(len(betas)):
+            #sab[i+a*len(betas)] = S1[i]
             sab[i+a*len(betas)] = S1[i] + S2[i]
     return sab, H, F
