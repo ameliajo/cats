@@ -17,23 +17,29 @@ def closeEnough(xL,xR,tol=1e-5):
     return abs(real-guess) < 1e-4
     #return abs((real-guess)/real) < tol
 
-xL = 0.0;        yL = func(xL)
-xR = xL+spacing; yR = func(xR)
-
+xL = 0.0
+xR = xL+spacing
 final_X = [xL]
-final_Y = [yL]
+final_Y = [func(xL)]
+
+yL = func(xL)
+yR = func(xR)
 
 while xR < 25:
-    yL = func(xL)
-    yR = func(xR)
-    if not closeEnough(xL,xR):
-        xR = (xL+xR)*0.5
-        yR = func(xR)
-    else:
+    xM = (xL+xR)*0.5
+    yM = func(xM)
+    guess = (yL+yR)*0.5
+    if abs(guess-yM) < 1e-3:
         final_X.append(xR)
         final_Y.append(yR)
         xL = xR
+        yL = yR
         xR = xL + spacing
+        yR = func(xR)
+    else:
+        xR = xM
+        yR = yM
+
 
 plt.plot(final_X,final_Y,'ro')
 plt.plot(final_X,[0.0]*len(final_X),'go')
