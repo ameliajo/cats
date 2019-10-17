@@ -2,11 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy import sin,cos,exp
 
-
 def func(x):
     return 5.0*x*exp(-x)
-
-spacing = 4.0
 
 def closeEnough(xL,xR,tol=1e-5):
     xM = (xL+xR)*0.5
@@ -15,10 +12,10 @@ def closeEnough(xL,xR,tol=1e-5):
     guess = (yL+yR)*0.5
     real  = func((xL+xR)*0.5)
     return abs(real-guess) < 1e-4
-    #return abs((real-guess)/real) < tol
 
+spacing = 4.0
 xL = 0.0
-xR = xL+spacing
+xR = spacing
 final_X = [xL]
 final_Y = [func(xL)]
 
@@ -41,21 +38,10 @@ while xR < 25:
         yR = yM
 
 
-plt.plot(final_X,final_Y,'ro')
-plt.plot(final_X,[0.0]*len(final_X),'go')
+plt.plot(final_X,final_Y,'ro',label='Function on adaptive grid')
+plt.plot(final_X,[0.0]*len(final_X),'go',label='Timestep locations')
+plt.legend(loc='best')
 plt.show()
-
-
-
-
-
-#plt.plot(x,y)
-#plt.plot(x,y,'ro')
-#plt.plot(halfway_X,halfway_guess,'go')
-#plt.plot(halfway_X,halfway_real,'bo')
-#plt.show()
-
-
 
 
 
