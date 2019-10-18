@@ -1,8 +1,6 @@
 import numpy as np
 from numpy import sinh, cosh, exp
 
-
-
 def getConvolAtPoint(i, delta, t1, t2):
     sumVal = 0.0
     for j in range(-len(t1)+1,len(t1)):
@@ -18,8 +16,7 @@ def convol(t1, t2, delta, nn):
     t3 = [0.0]*nn
     for i in range(nn):
         t3[i] = getConvolAtPoint(i,delta,t1,t2)*delta
-        if t3[i] < 1e-30:
-            t3[i] = 0.0
+        if t3[i] < 1e-30: t3[i] = 0.0
     return t3
 
 

@@ -1,9 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from numpy import sinh, cosh, exp
-from dos import *
 from convolution import *
-import matplotlib.pyplot as plt
 
 
 def interpolate(vec, x, delta):
@@ -15,8 +12,6 @@ def interpolate(vec, x, delta):
             m = (vec[i+1]-vec[i])/delta
             return m*(x-i*delta)+b
     return 0.0
-
-
 
 def contin(nphon, delta, rho, alpha, beta):
     betaGrid = [delta*i for i in range(len(rho))]
@@ -30,13 +25,15 @@ def contin(nphon, delta, rho, alpha, beta):
 
     sab = [0.0]*len(alpha)*len(beta)
     xa = [1.0]*len(alpha)
+
     tnow  = [0.0]*nphon*len(t1)
     tlast = [0.0]*nphon*len(t1)
     for i in range(len(t1)):
         tnow[i]  = t1[i]
         tlast[i] = t1[i]
-    nNext = len(t1)
-    nLast = len(t1)
+
+    nNext, nLast = len(t1), len(t1)
+
     lambda_alpha = [lambda_s*alphaVal for alphaVal in alpha]
     exp_lambda_alpha = [exp(-lambda_alpha_val) for lambda_alpha_val in lambda_alpha]
 
@@ -61,34 +58,22 @@ def contin(nphon, delta, rho, alpha, beta):
 
 
 
+if __name__=='__main__':
+    from dos import *
+    import matplotlib.pyplot as plt
+    print("This probably has to be debugged, doesnt match NJOY")
 
-#alpha = [0.01, 0.08, 4.00, 6.00, 20, 50]
-#beta  = [0.0, 0.4, 1.0, 5.0, 9.0, 20]
-alpha = np.linspace(0,5,20)
-beta  = list(np.linspace(0,1,30)) + list(np.linspace(1.1,5,30)) + list(np.linspace(5.1,20,20))
+    alpha = np.linspace(0,5,20)
+    beta  = list(np.linspace(0,1,30)) + list(np.linspace(1.1,5,30)) + list(np.linspace(5.1,20,20))
 
-delta = delta_water
-rho = rho_water[:]
-betaGrid = [delta*i for i in range(len(rho))]
-sab = contin(20,delta,rho,alpha,beta)
+    delta = delta_water
+    rho = rho_water[:]
+    betaGrid = [delta*i for i in range(len(rho))]
+    sab = contin(20,delta,rho,alpha,beta)
 
-
-for a in range(len(alpha)):
-    sabChunk = [sab[b+a*len(beta)] for b in range(len(beta))]
-    plt.plot(beta,sabChunk)
-plt.show()
-
-
-
-
-
-
-
-
-#print(betaGrid)
-#plt.plot(rho)
-#plt.show()
-
-
+    for a in range(len(alpha)):
+        sabChunk = [sab[b+a*len(beta)] for b in range(len(beta))]
+        plt.plot(beta,sabChunk)
+    plt.show()
 
 
