@@ -1,22 +1,16 @@
 import numpy as np
 from numpy import sin,cos,sinh,cosh,exp
 import matplotlib.pyplot as plt
+import sys
+sys.path.append('../phononDistributions')
 from waterDataContinuous import X as h2oX, Q as h2oQ
-from beoData import X as beoX, Q as beoQ
+from beoData             import X as beoX, Q as beoQ
 
-
-def get_CT(x):
-    return (1.0-cos(x))/x if x > 0.005 else x*0.5 - x**3/24.0
-def get_ST(x):
-    return  1.0-sin(x) /x if x > 0.005 else x**2/6.0 - x**4/120.0
-def get_sin(x):
-    return sin(x) if x > 0.005 else x - x**3*0.1666666
-def get_F0(x):
-    return sin(x)/x**2 - cos(x)/x if x > 0.005 else x/3.0 - (x**3)/30.0
+def get_CT(x): return (1.-cos(x))/x          if x > 5e-3 else x*0.5 - x**3/24.
+def get_ST(x): return  1.-sin(x) /x          if x > 5e-3 else x**2/6. - x**4/120.
+def get_sin(x):return sin(x)                 if x > 5e-3 else x - x**3*0.1666666
+def get_F0(x): return sin(x)/x**2 - cos(x)/x if x > 5e-3 else x/3. - (x**3)/30.
     
-
-
-
 def get_F_H(betas,Q,time):
     coth = [cosh(beta*0.5)/sinh(beta*0.5) for beta in betas]
     F, H = [0.0]*len(time), [0.0]*len(time)
@@ -56,8 +50,6 @@ def get_F_H(betas,Q,time):
     F[0] = 0.0;
     H[0] = Q[0]/betas[0] + 0.5*Q[0]*coth[0] + \
            np.trapz([Q[i]*coth[i]/betas[i] for i in range(len(betas))],betas)
-    #for i in range(len(betas)):
-    #  Q[i] = Q[i]*(betas[i]**2)*0.5;
 
     for i in range(len(time)):
       H[i] *= norm;
