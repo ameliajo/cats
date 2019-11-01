@@ -7,6 +7,7 @@ import sys
 sys.path.append("NJOY/")
 sys.path.append("GASKET/")
 sys.path.append("SIMPLE_GASKET/")
+sys.path.append("QUAD_GASKET/")
 
 def prepPlot(vector):
     cnorm = colors.Normalize(vmin=0,vmax=len(vector)+2)
@@ -40,6 +41,19 @@ def doThePlottingReverse(alphas,betas,sab,linestyle,scalarMap):
                  linewidth=2,linestyle=linestyle)
         plt.fill_between(betas[:-1],chunk[:-1],linewidth=2,linestyle=linestyle,\
                  color=scalarMap.to_rgba(len(alphas)-a-1),alpha=0.6)
+
+def doThePlottingSingleAlpha(alphas,betas,sab,linestyle):
+    for a in range(len(alphas)):
+        chunk = [sab[b+a*len(betas)] for b in range(len(betas))]
+        #for b in range(0,len(chunk)-2,10):
+        #    for bp in range(10):
+        #        if chunk[b+bp] < 0.0:
+        #            for bp2 in range(10): chunk[b+bp2] = 1e-8
+        #            break
+
+        plt.plot(betas[1:],chunk[1:],linewidth=2,\
+                 linestyle=linestyle)
+
 
 
 def doThePlotting(alphas,betas,sab,linestyle,scalarMap):
@@ -83,6 +97,19 @@ def getValuesFromInput(name):
         H, F   = [x*temp for x in H], [x*temp for x in F]
         return temp,alphas,betas,sab,num_t,delta_t,H,F,name
 
+    elif name[0] == 'q':
+        fName = 'quad_'+name[1]
+        alphas = importMod(fName).alphas; betas   = importMod(fName).betas
+        temp   = importMod(fName).temp;   sab     = importMod(fName).sab
+        num_t  = importMod(fName).num_t;  delta_t = importMod(fName).delta_t 
+        H      = importMod(fName).H    ;  F       = importMod(fName).F
+        #         color=scalarMap.to_rgba(a),linewidth=2,linestyle=linestyle)
+        name   = importMod(fName).name
+        H, F   = [x*temp for x in H], [x*temp for x in F]
+        return temp,alphas,betas,sab,num_t,delta_t,H,F,name
+
+
+
     elif name[0] == 'n':
         fName = 'njoy_output_'+name[1]
         alphas = importMod(fName).alphas; betas  = importMod(fName).betas
@@ -106,9 +133,10 @@ if __name__=='__main__':
     option = 2 # Here, we look at a few different sab datasets and see how the 
                # timestep sizes affect them. These should all be GASKET inputs
     option = 3 # Here, we plot one or more S(a,b) against beta for various alphas
-    option = 4 # % difference betwen two S(a,b) grids, plotted against beta for
-               # various alphas
-    option = 5 # Plots F(t), H(t), Q and R
+    #option = 4 # % difference betwen two S(a,b) grids, plotted against beta for
+    #           # various alphas
+    #option = 5 # Plots F(t), H(t), Q and R
+    option = 6 # Single alpha sab values
     
     if option == 0:
         T,alphas,betas,sab,nt,dt,H,F,name = getValuesFromInput(sys.argv[1])
@@ -202,7 +230,8 @@ if __name__=='__main__':
             alphasOld, betasOld = alphas[:], betas[:]
             doThePlotting(alphas,betas,sab,patterns[i],scalarMap)
         plt.xlabel('beta'); plt.ylabel('S(a,-b)'); 
-        plt.title('S(a,-b) for '+name+' at '+str(int(T/8.617e-5))+'K (NJOY vs. GASKET)')
+        #plt.title('S(a,-b) for '+name+' at '+str(int(T/8.617e-5))+'K (NJOY vs. GASKET)')
+        plt.title('Solid = non-quad gasket, dotted = quad gasket')
         plt.yscale('log'); plt.show()
 
 
@@ -264,6 +293,18 @@ if __name__=='__main__':
         plt.xlabel('t'); plt.ylabel('Normalized'); plt.legend(loc='best')
         plt.title('H(t) and F(t) for '+name+'at '+str(int(T/8.617e-5))+'K')
         plt.show()
+
+    if option == 6:
+        patterns = ['solid','dashed','dotted']
+        for i,name in enumerate(sys.argv[1:]):
+            T,alphas,betas,sab,nt,dt,H,F,name = getValuesFromInput(name)
+            doThePlottingSingleAlpha(alphas,betas,sab,patterns[i])
+        plt.xlabel('beta'); plt.ylabel('S(a,-b)'); 
+        #plt.title('S(a,-b) for '+name+' at '+str(int(T/8.617e-5))+'K (NJOY vs. GASKET)')
+        plt.title('Solid = non-quad gasket, dotted = quad gasket')
+        plt.yscale('log'); 
+        plt.show()
+
 
 
 
