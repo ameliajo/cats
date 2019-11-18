@@ -1,10 +1,5 @@
 import numpy as np
 from numpy import sin,cos,sinh,cosh,exp
-import matplotlib.pyplot as plt
-import sys
-sys.path.append('../phononDistributions')
-from waterDataContinuous import X as h2oX, Q as h2oQ
-from beoData             import X as beoX, Q as beoQ
 
 def get_CT(x): return (1.-cos(x))/x          if x > 5e-3 else x*0.5 - x**3/24.
 def get_ST(x): return  1.-sin(x) /x          if x > 5e-3 else x**2/6. - x**4/120.
@@ -59,6 +54,12 @@ def get_F_H(betas,Q,time):
 
 
 if __name__=="__main__":
+    import matplotlib.pyplot as plt
+    import sys
+    sys.path.append('../../phononDistributions')
+    from waterDataContinuous import X as h2oX, Q as h2oQ
+    from beoData             import X as beoX, Q as beoQ
+
     colors = ['#ddd09a','#c55074','#4fc4c1','#5c1f4b','#e2c9ed']
 
     invT = 1.0/0.0255
