@@ -85,22 +85,22 @@ if __name__=="__main__":
         '#d62728','#ff9896','#9467bd','#c5b0d5','#8c564b','#c49c94','#e377c2',\
         '#f7b6d2','#7f7f7f','#c7c7c7','#bcbd22','#dbdb8d','#17becf','#9edae5']
 
-    alphas = [0.001,0.1,1.0,5.0,8.0,10.0,20.0]
-    betas  = list(np.linspace(0,15,101))
+    alphas = [0.001,0.1,1.0,5.0,8.0]#,10.0,20.0]
+    betas  = list(np.linspace(0,15,61))
 
     NT1 = 1e4; time1 = np.linspace(0,94,NT1)
-    NT2 = 2e4; time2 = np.linspace(0,94,NT2)
+    #NT2 = 2e4; time2 = np.linspace(0,94,NT2)
 
     sab1,H,F = simpleGASKET(rhoBetas,Q,time1,alphas,betas)
-    sab2,H,F = simpleGASKET(rhoBetas,Q,time2,alphas,betas)
+    #sab2,H,F = simpleGASKET(rhoBetas,Q,time2,alphas,betas)
 
     scalarMap = prepPlot(alphas)
 
     for a in range(len(alphas)):
         plt.plot(betas[:-2],[sab1[b+a*len(betas)] for b in range(len(betas)-2)],\
                  color=scalarMap.to_rgba(a),linewidth=1.5,alpha=0.8)
-        plt.plot(betas[:-2],[sab2[b+a*len(betas)] for b in range(len(betas)-2)],\
-                 color=scalarMap.to_rgba(a),linewidth=1.5,alpha=0.8,linestyle='dashed')
+        #plt.plot(betas[:-2],[sab2[b+a*len(betas)] for b in range(len(betas)-2)],\
+        #         color=scalarMap.to_rgba(a),linewidth=1.5,alpha=0.8,linestyle='dashed')
 
     plt.show()
 
