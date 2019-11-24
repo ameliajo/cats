@@ -12,7 +12,8 @@ def interpolate(yVec, xVal, delta):
 
 def contin(nphon, delta, wgt, rho, alphas, betas):
     betaGrid     = [delta*i for i in range(len(rho))]
-    lambda_s, t1 = start(betaGrid,rho,wgt)
+    lambda_s, t1 = start(betaGrid,rho,wgt) 
+    # This is T1(-beta) 
     sab = [0.0]*len(alphas)*len(betas)
     xa  = [1.0]*len(alphas)
     tnow  = [0.0]*(len(t1)*nphon)
@@ -26,6 +27,7 @@ def contin(nphon, delta, wgt, rho, alphas, betas):
 
     for n in range(nphon):
         if n > 0:
+            # Convol takes T1(-beta) and T2(-beta) and gives you T3(-beta)
             nNext = len(t1)+nLast-1
             tnow = convol(t1, tlast, delta, nNext)
         inv_n = 1.0/(n+1)
@@ -42,5 +44,25 @@ def contin(nphon, delta, wgt, rho, alphas, betas):
         for i in range(nNext):
             tlast[i] = tnow[i]
         nLast = nNext
+    return sab
+
+def continOnlyT1(nphon, delta, wgt, rho, alphas, betas):
+    betaGrid     = [delta*i for i in range(len(rho))]
+    lambda_s, t1 = start(betaGrid,rho,wgt)
+    sab = [0.0]*len(alphas)*len(betas)
+    xa  = [1.0]*len(alphas)
+    lambda_alpha = [lambda_s*alpha for alpha in alphas]
+    exp_lambda_alpha = [exp(-lambda_alpha_val) for lambda_alpha_val in lambda_alpha]
+
+    for n in range(nphon):
+        inv_n = 1.0/(n+1)
+        for a in range(len(alphas)):
+            xa[a] *= lambda_alpha[a] * inv_n
+            exx    = exp_lambda_alpha[a]*xa[a]
+
+            for b in range(len(betas)):
+                add = exx * interpolate(t1,betas[b],delta)
+                if add > 1e-30:
+                    sab[b+a*len(betas)] += add
     return sab
 
