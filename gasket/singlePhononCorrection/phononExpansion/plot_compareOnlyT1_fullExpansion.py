@@ -18,36 +18,35 @@ rho_x = [0.0]+rho_x
 rho_y = [0.0]+rho_y
 f = interp1d(rho_x,rho_y,bounds_error=False,fill_value=0.0,kind='cubic')
 uniform_x = np.linspace(0,rho_x[-1],3*len(rho_x))
+uniform_x = np.linspace(0,rho_x[-1],1*len(rho_x))
 uniform_y = f(uniform_x)
 
-alpha = 0.001
-alpha = 0.010
-alpha = 0.100
 betas = np.linspace(0,25,501)
+betas = np.linspace(0,5,101)
 uniform_x = [x/0.0255 for x in uniform_x]
 
-for n,nphon in enumerate([1,2,3,5]):
-    print(nphon)
-    sab = contin(nphon,uniform_x[1]-uniform_x[0],1.0,uniform_y,[alpha],betas)
+nphon = 10
+for a,alpha in enumerate([0.001,0.01,0.1,1.0]):
+    print(alpha)
+    sab = contin(nphon,uniform_x[1]-uniform_x[0],uniform_y,[alpha],betas)
     plt.plot(betas,[sab[b]*exp(-betas[b]) for b in range(len(betas))],\
-             color=misccolors[n],\
-             label='nphon = '+str(nphon),\
+             color=misccolors[a],\
+             label='alpha = '+str(alpha),\
              linestyle='solid')
-    sabApprox = continOnlyT1(nphon,uniform_x[1]-uniform_x[0],1.0,uniform_y,[alpha],betas)
+
+    sabApprox = continOnlyT1(uniform_x[1]-uniform_x[0],uniform_y,[alpha],betas)
     plt.plot(betas,[sabApprox[b]*exp(-betas[b]) for b in range(len(betas))],\
-             color='k',\
+             color=misccolors[a],\
              #label='nphon = '+str(nphon),\
-             linestyle='dotted')
-    print(sab[-3:])
+             linestyle='dashed', markersize=4)
 
 
-
-
-
-plt.title('S(a,b) for H in H2O for alpha = '+str(alpha))
+plt.title('S(a,b) for H in H2O (solid == 10 phonon terms, dashed = approx)')
 plt.xlabel('beta')
 plt.ylabel('S(a,b)')
-plt.yscale('log')
+#plt.yscale('log')
+plt.xlim([-0.5,5])
+plt.ylim([-0.2,1.2])
 plt.legend(loc='best')
 plt.show()
 

@@ -1,7 +1,7 @@
 from start import *
 from convol import *
 import numpy as np
-from math import exp
+from math import exp, factorial
 
 def interpolate(yVec, xVal, delta):
     if xVal >= len(yVec)*delta or xVal < 0: return 0.0
@@ -10,9 +10,9 @@ def interpolate(yVec, xVal, delta):
             return yVec[i] + (xVal-delta*i) * (yVec[i+1]-yVec[i]) / delta
     return 0.0
 
-def contin(nphon, delta, wgt, rho, alphas, betas):
+def contin(nphon, delta, rho, alphas, betas):
     betaGrid     = [delta*i for i in range(len(rho))]
-    lambda_s, t1 = start(betaGrid,rho,wgt) 
+    lambda_s, t1 = start(betaGrid,rho,1.0) 
     # This is T1(-beta) 
     sab = [0.0]*len(alphas)*len(betas)
     xa  = [1.0]*len(alphas)
@@ -36,7 +36,10 @@ def contin(nphon, delta, wgt, rho, alphas, betas):
             exx    = exp_lambda_alpha[a]*xa[a]
 
             for b in range(len(betas)):
-                add = exx * interpolate(tnow,betas[b],delta)
+                #add = exx * interpolate(tnow,betas[b],delta)
+                add = exp(-alphas[a]*lambda_s) * \
+                      interpolate(tnow,betas[b],delta) * \
+                      (alphas[a]*lambda_s)**(n+1) / factorial(n+1)
                 if add > 1e-30:
                     sab[b+a*len(betas)] += add
         if n == 0:
@@ -46,23 +49,19 @@ def contin(nphon, delta, wgt, rho, alphas, betas):
         nLast = nNext
     return sab
 
-def continOnlyT1(nphon, delta, wgt, rho, alphas, betas):
+def continOnlyT1(delta, rho, alphas, betas):
     betaGrid     = [delta*i for i in range(len(rho))]
-    lambda_s, t1 = start(betaGrid,rho,wgt)
-    sab = [0.0]*len(alphas)*len(betas)
-    xa  = [1.0]*len(alphas)
+    lambda_s, t1 = start(betaGrid,rho,1.0)
+    sab  = [0.0]*len(alphas)*len(betas)
     lambda_alpha = [lambda_s*alpha for alpha in alphas]
     exp_lambda_alpha = [exp(-lambda_alpha_val) for lambda_alpha_val in lambda_alpha]
 
-    for n in range(nphon):
-        inv_n = 1.0/(n+1)
-        for a in range(len(alphas)):
-            xa[a] *= lambda_alpha[a] * inv_n
-            exx    = exp_lambda_alpha[a]*xa[a]
-
-            for b in range(len(betas)):
-                add = exx * interpolate(t1,betas[b],delta)
-                if add > 1e-30:
-                    sab[b+a*len(betas)] += add
+    for a in range(len(alphas)):
+        for b in range(len(betas)):
+            sab[b+a*len(betas)] = interpolate(t1,betas[b],delta) * \
+                                  (1.0 - exp_lambda_alpha[a])
     return sab
+
+
+
 
