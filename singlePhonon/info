@@ -1,0 +1,3 @@
+This directory is to look at the phonon expansion method and see what happens
+(i.e. how much error is introduced) if you only look at the T1 terms of the 
+summation. See the Eq. 523 of the LEAPR manual. 
