@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 import sys
 import numpy as np
 from math import exp
+sys.path.append('../phononDistributions')
+sys.path.append('../phononExpansion')
+sys.path.append('../phononExpansion/help')
 from getSAB_phononExpansion import *
-sys.path.append('../../phononDistributions')
 from colors import misccolors
 
 #from waterData    import rho_f, X as rho_x, title
@@ -16,9 +18,9 @@ uniform_y = rho_f(uniform_x)
 alpha = 0.01
 alpha = 0.10
 #alpha = 1.00
+
 betas = np.linspace(0,10,500)
 uniform_x = [x/0.0255 for x in uniform_x]
-
 
 for n,nphon in enumerate([1,2,5]):#,4,5,20,30]:#,50]:
     print(nphon)

@@ -1,15 +1,13 @@
 import matplotlib.pyplot as plt
 import sys; import numpy as np
-sys.path.append('../../phononDistributions'); 
-sys.path.append('./help/')
+sys.path.append('../phononDistributions'); 
+sys.path.append('../phononExpansion/help/')
 from colors      import misccolors
 from getT1       import *
 from convolution import *
 #from beoData import rho_f, X as rho_x, title
 #from waterData import rho_f, X as rho_x, title
 from graphiteData import rho_f, X as rho_x, title
-
-
 
 def plot_Tn(delta,tn_neg,color,label):
     plt.plot([-delta*i for i in range(len(tn_neg))],tn_neg,color=color,label=label)

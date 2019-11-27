@@ -1,15 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import sys; sys.path.append('../../phononDistributions')
-from scipy.interpolate import interp1d
+import sys 
+sys.path.append('../phononDistributions')
+sys.path.append('../phononExpansion')
+sys.path.append('../phononExpansion/help')
 from math import exp
 from getSAB_phononExpansion import * 
 from getSAB_T1_approx import * 
-from colors import *
+from colors import misccolors
 
 #from beoData import rho_f, X as rho_x, title
-#from waterData import rho_f, X as rho_x, title
-from graphiteData import rho_f, X as rho_x, title
+from waterData import rho_f, X as rho_x, title
+#from graphiteData import rho_f, X as rho_x, title
 
 uniform_x = np.linspace(0,rho_x[-1],1*len(rho_x))
 uniform_y = rho_f(uniform_x)

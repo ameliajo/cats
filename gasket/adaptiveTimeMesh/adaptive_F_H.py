@@ -1,9 +1,9 @@
 import sys
-sys.path.append('../phononDistributions')
+sys.path.append('../../phononDistributions')
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy import sin,cos,exp,sinh,cosh
-from waterDataContinuous import *
+from waterData import *
 
 
 # What this is meant to show is that converging your t grid to represent F(t)
