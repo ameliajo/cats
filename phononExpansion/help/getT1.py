@@ -4,7 +4,7 @@ from math import sinh, exp
 
 
 
-def start(betas, rho, wgt):
+def getT1(betas, rho, wgt):
     # Returns Debye-Waller factor lambda_s and the first value in the phonon
     # expansion, T1. Note that this is T1(-beta)
     P = [rho[1]/betas[1]**2] + \
@@ -37,5 +37,5 @@ if __name__=='__main__':
     uniform_y = f(uniform_x)
     uniform_x = [x/0.0255 for x in uniform_x]
     delta = uniform_x[1]-uniform_x[0]
-    lambda_s, t1 = start(uniform_x,uniform_y,1.0)
+    lambda_s, t1 = getT1(uniform_x,uniform_y,1.0)
 

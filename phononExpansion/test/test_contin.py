@@ -1,5 +1,5 @@
 from helper import *
-from contin         import *
+from getSAB_phononExpansion import *
 
 
 class TestContin(unittest.TestCase):
@@ -22,7 +22,7 @@ class TestContin(unittest.TestCase):
         betas  = [0.0, 0.4, 1.0, 5.0, 9.0, 20.0]
         alphas = [0.0253/tev * a for a in alphas]
         betas  = [0.0253/tev * b for b in betas]
-        sab = contin(nphon, delta, tbeta, rho, alphas, betas)
+        sab = getSAB_phononExpansion(nphon, delta, rho, alphas, betas, tbeta)
         sabCorrect = [5.6553448E-4, 2.9998239E-4, 3.5728611E-4, 1.3283598E-4, \
         7.2155584E-8, 7.038367E-16, 4.4601537E-3, 2.3709915E-3, 2.8246954E-3, \
         1.0657726E-3, 4.6129213E-6, 2.919488E-12, 1.0134916E-1, 6.0785511E-2, \

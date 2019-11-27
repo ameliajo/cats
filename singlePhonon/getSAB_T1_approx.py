@@ -1,4 +1,4 @@
-import sys; sys.path.append('./help/')
+import sys; sys.path.append('../phononExpansion/help/')
 import numpy as np
 from getT1       import *
 from convolution import *
@@ -6,8 +6,7 @@ from interpolate import *
 from math        import exp, factorial
 
 
-def getSAB_T1_approx(delta, rho, alphas, betas):
-    betaGrid     = [delta*i for i in range(len(rho))]
+def getSAB_T1_approx(betaGrid, rho, alphas, betas):
     lambda_s, t1 = getT1(betaGrid,rho,1.0)
     sab  = [0.0]*len(alphas)*len(betas)
     lambda_alpha = [lambda_s*alpha for alpha in alphas]
@@ -15,15 +14,15 @@ def getSAB_T1_approx(delta, rho, alphas, betas):
 
     for a in range(len(alphas)):
         for b in range(len(betas)):
-            sab[b+a*len(betas)] = interpolate(t1,betas[b],delta) * \
+            sab[b+a*len(betas)] = interpolate(betaGrid,t1,betas[b]) * \
                                   (1.0 - exp_lambda_alpha[a])
     return sab
 
 
 if __name__=='__main__':
-    sys.path.append('../../phononDistributions')
-    from waterDataContinuous import X as rho_x
-    from waterDataContinuous import Q as rho_y
+    sys.path.append('../phononDistributions')
+    from waterData import X as rho_x
+    from waterData import Q as rho_y
     from colors              import misccolors
     from scipy.interpolate   import interp1d
     import matplotlib.pyplot as plt
@@ -34,9 +33,11 @@ if __name__=='__main__':
     delta = (uniform_x[1]-uniform_x[0])/0.0255
     betas = np.linspace(0,25,101)
 
+    betaGrid     = [delta*i for i in range(len(rho_x))]
+
     for a,alpha in enumerate([0.001,0.01,0.1,1.0]):
         print('alpha = '+str(alpha))
-        sab_nonsym_neg_side = getSAB_T1_approx(delta,f(uniform_x),[alpha],betas)
+        sab_nonsym_neg_side = getSAB_T1_approx(betaGrid,f(uniform_x),[alpha],betas)
         sab_nonsym_pos_side = [sab_nonsym_neg_side[b]*exp(-betas[b]) for b in range(len(betas))]
         plt.plot(betas,sab_nonsym_pos_side,color=misccolors[a],\
                  label='alpha = '+str(alpha),linestyle='solid')

@@ -1,6 +1,7 @@
 import unittest
 import sys 
 sys.path.append('../')
+sys.path.append('../help')
 
 def approxEqual(x,y,tol):
     assert(abs((x-y)/y) < tol)

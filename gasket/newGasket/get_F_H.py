@@ -57,7 +57,7 @@ if __name__=="__main__":
     import matplotlib.pyplot as plt
     import sys
     sys.path.append('../../phononDistributions')
-    from waterDataContinuous import X as h2oX, Q as h2oQ
+    from waterData import X as h2oX, Q as h2oQ
     from beoData             import X as beoX, Q as beoQ
 
     colors = ['#ddd09a','#c55074','#4fc4c1','#5c1f4b','#e2c9ed']

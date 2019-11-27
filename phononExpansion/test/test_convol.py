@@ -1,5 +1,5 @@
 from helper import *
-from convol import *
+from convolution import *
 
 
 class TestConvol(unittest.TestCase):
