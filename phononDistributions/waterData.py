@@ -39,7 +39,7 @@ X_uniform = [0] + X
 Q_uniform = [0] + Q
 
 def interpolate(xVec,yVec,x):
-    if x < xVec[0] or x > xVec[-1]: return 0.0
+    if x < 0 or x > xVec[-1]: return 0.0
     for i in range(len(xVec)-1):
         if x > xVec[i] and x < xVec[i+1]:
             b = yVec[i]
@@ -49,8 +49,8 @@ def interpolate(xVec,yVec,x):
 
 X_orig = X[:]
 Q_orig = Q[:]
-uniformX = np.linspace(0,0.495,100)
-uniformY = [interpolate(X,Q,x) for x in uniformX]
+uniformX = np.linspace(0,X[-1],300)
+uniformY = [interpolate([0.0]+X,[0.0]+Q,x) for x in uniformX]
 
 uniformX = [float("{0:.7f}".format(round(a,7))) for a in uniformX]
 uniformY = [float("{0:.5f}".format(round(a,5))) for a in uniformY]
@@ -60,13 +60,17 @@ Q = uniformY[1:]
 ########
 
 
+#print(uniformX)
+#print(uniformY)
+#exit()
 
-kbT = 0.0255
 
-rho_f = interp1d([0.0]+X,[0.0]+Q,bounds_error=False,fill_value=0.0,kind='cubic')
-uniform_x = np.linspace(0,X[-1],3*len(X))
-uniform_y = rho_f(uniform_x)
-uniform_x = [x/kbT for x in uniform_x]
+#kbT = 0.0255
+
+#rho_f = interp1d([0.0]+X,[0.0]+Q,bounds_error=False,fill_value=0.0,kind='cubic')
+#uniform_x = np.linspace(0,X[-1],3*len(X))
+#uniform_y = rho_f(uniform_x)
+#uniform_x = [x/kbT for x in uniform_x]
 
 
 

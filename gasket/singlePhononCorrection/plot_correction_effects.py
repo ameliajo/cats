@@ -78,7 +78,7 @@ def simpleGASKET(rhoBetas,rho,time,alphas,betas,useCorrection = False):
                 if unstable == True:
                     sab[i] = getSAB_T1_approx(rhoBetas,rho,[alpha],[beta])[0]*exp(-betas[b])
 
-    return sab,oscBegin,treatOsc
+    return sab,H,F,oscBegin,treatOsc
 
 
 
@@ -98,9 +98,14 @@ if __name__=="__main__":
     #sab_approx = [getSAB_T1_approx(uniform_x[1:],uniform_y[1:],[alphas[0]],[betas[b]])[0]*exp(-betas[b]) for b in range(len(betas))]
     #plt.plot(betas,sab_approx,'yo',markersize=5,linestyle='solid')
 
-    sab_no_correction, oscBegin, treatOsc = \
+    #for i in range(len(betas)):
+    #    print(betas[i])
+    #print(len(betas))
+    #exit()
+
+    sab_no_correction,  H, F, oscBegin, treatOsc = \
               simpleGASKET(uniform_x[1:],uniform_y[1:],time,alphas,betas,False)
-    sab_yes_correction,oscBegin, treatOsc = \
+    sab_yes_correction, H, F, oscBegin, treatOsc = \
               simpleGASKET(uniform_x[1:],uniform_y[1:],time,alphas,betas,True)
     print("Just finished gasket")
 

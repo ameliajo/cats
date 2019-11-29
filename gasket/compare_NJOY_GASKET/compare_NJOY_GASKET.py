@@ -66,8 +66,8 @@ def doThePlotting(alphas,betas,sab,linestyle,scalarMap):
                     for bp2 in range(10): chunk[b+bp2] = 1e-8
                     break
 
-        plt.plot(betas[:-1],chunk[:-1],color=scalarMap.to_rgba(a),linewidth=2,\
-                 linestyle=linestyle)
+        plt.plot(betas[:-1],chunk[:-1],color=scalarMap.to_rgba(a),linewidth=0.5,\
+                 linestyle=linestyle,markersize=5,marker='o')
 
 def plot_H_or_F(time,func,linestyle,color):
     plt.plot(time,func,color=color,linewidth=2,linestyle=linestyle)
@@ -136,7 +136,7 @@ if __name__=='__main__':
     #option = 4 # % difference betwen two S(a,b) grids, plotted against beta for
     #           # various alphas
     #option = 5 # Plots F(t), H(t), Q and R
-    option = 6 # Single alpha sab values
+    #option = 6 # Single alpha sab values
     
     if option == 0:
         T,alphas,betas,sab,nt,dt,H,F,name = getValuesFromInput(sys.argv[1])

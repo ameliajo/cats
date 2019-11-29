@@ -18,32 +18,32 @@ def simpleGASKET(rhoBetas,rho,time,alphas,betas,flagUnstable = False):
     beta_exp  = [exp(beta*0.5)       for beta  in betas ] # This is to turn 
                                          # the scattering law to be symmetric
 
-    unstable = False
+    #unstable = False
     for a,alpha in enumerate(alphas):
         alpha_H_exp = [exp(alpha*H[t]) for t in range(len(time))]
         sin_alpha_F = [sin(alpha*F[t]) for t in range(len(time))]
         cos_alpha_F = [cos(alpha*F[t]) for t in range(len(time))]
-        numNeg = 0
+        #numNeg = 0
         for b,beta in enumerate(betas):
             integrand = [alpha_H_exp[t] * cos_alpha_F[t] * cos(beta*time[t]) \
                        - alpha_H_exp[t] * sin_alpha_F[t] * sin(beta*time[t]) \
                        - cos(beta*time[t]) for t in range(len(time))]
             sab[b+a*len(betas)] = np.trapz(integrand,time) * alpha_exp[a] * beta_exp[b]
-            if b+a*len(betas) < 2: continue
+            #if b+a*len(betas) < 2: continue
             
-            if sab[b+a*len(betas)-2] < 0 or \
-               sab[b+a*len(betas)-1] < 0 or \
-               sab[b+a*len(betas)  ] < 0:   \
-                   unstable = True
-            if sab[b+a*len(betas)-2] > 0 and \
-               sab[b+a*len(betas)-1] > 0 and \
-               sab[b+a*len(betas)  ] > 0:    \
-                   unstable = False
+            #if sab[b+a*len(betas)-2] < 0 or \
+            #   sab[b+a*len(betas)-1] < 0 or \
+            #   sab[b+a*len(betas)  ] < 0:   \
+            #       unstable = True
+            #if sab[b+a*len(betas)-2] > 0 and \
+            #   sab[b+a*len(betas)-1] > 0 and \
+            #   sab[b+a*len(betas)  ] > 0:    \
+            #       unstable = False
 
-            if unstable:
-                plt.plot(beta,sab[b+a*len(betas)],'ro')
-            else:
-                plt.plot(beta,sab[b+a*len(betas)],'bo')
+            #if unstable:
+            #    plt.plot(beta,sab[b+a*len(betas)],'ro')
+            #else:
+            #    plt.plot(beta,sab[b+a*len(betas)],'bo')
 
 
     return sab,H,F
