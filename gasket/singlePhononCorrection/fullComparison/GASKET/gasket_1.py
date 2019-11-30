@@ -7,3 +7,5 @@ temp   = 0.025507305679999998
 num_t  = 3001
 delta_t= 0.03206666666666667
 name   = 'H in H2O'
+oscBegin        = 'None'
+correctionBegin = 'None'

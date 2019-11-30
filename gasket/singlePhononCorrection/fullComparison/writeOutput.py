@@ -1,6 +1,6 @@
 import sys
 
-def writeOutput(fileName,alphas,betas,sab,H,F,T,t,title,oscBegin=None,correctionBegin=None):
+def writeOutput(fileName,alphas,betas,sab,H,F,T,t,title,oscBegin='None',correctionBegin='None'):
     f = open(fileName,'w')
     f.write("alphas = "+str(alphas)   +"\n")
     f.write("betas  = "+str(betas)    +"\n")

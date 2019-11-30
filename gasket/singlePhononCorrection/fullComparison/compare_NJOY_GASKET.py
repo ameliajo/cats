@@ -126,6 +126,7 @@ if __name__=='__main__':
     if len(sys.argv) == 1: print('Tell me what to plot!'); exit()
 
     option = 0
+    #option = 1
 
     if option == 0:
         cnorm = colors.Normalize(vmin=0,vmax=len(sys.argv))
@@ -136,6 +137,9 @@ if __name__=='__main__':
             label = 'gasket'           if name.split('.')[0] == 'g'  else \
                     'corrected gasket' if name.split('.')[0] == 'gc' else \
                     'njoy'             if name.split('.')[0] == 'n'  else '?'
+            if label == 'corrected gasket' and oscBegin == 'None':
+                print('No correction needed!')
+                continue
             for a in range(len(alphas)):
                 chunk = [sab[b+a*len(betas)] for b in range(len(betas))]
                 plt.plot(betas,chunk,linewidth=1.5,label=label,color=scalarMap.to_rgba(i))
@@ -147,6 +151,23 @@ if __name__=='__main__':
         plt.title('S(a,b) for '+title+' at '+str(int(T/8.617e-5))+'K for alpha='+str(alphas[0]))
         plt.legend(loc='best')
         plt.yscale('log'); 
+        plt.show()
+
+    if option == 1:
+        assert(len(sys.argv) == 2)
+        cnorm = colors.Normalize(vmin=0,vmax=len(sys.argv))
+        scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('tab10')) 
+
+        T,alphas,betas,sab,nt,dt,H,F,title,oscBegin,correctionBegin = getValuesFromInput(sys.argv[1])
+        time = [i*dt for i in range(len(H))]
+        invArea = 1.0/np.trapz(F,time); F = [invArea*x for x in F]
+        invArea = 1.0/np.trapz(H,time); H = [invArea*x for x in H]
+        plt.plot(time,H,label='H(t)')
+        plt.plot(time,F,label='F(t)')
+
+        plt.xlabel('time'); plt.ylabel('Key Gasket Functions'); 
+        plt.title('F(t) and H(t) for '+title+' at '+str(int(T/8.617e-5))+'K (normalized)')
+        plt.legend(loc='best')
         plt.show()
 
 

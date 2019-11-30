@@ -43,6 +43,7 @@ def simpleGASKET(rhoBetas,rho,time,alphas,betas,useCorrection = False):
     alpha_exp = [exp(-alpha*H[0])/pi for alpha in alphas] # H[0] = debye waller 
     unstable = False
 
+    scaling = 1.0
     for a,alpha in enumerate(alphas):
         alpha_H_exp = [exp(alpha*H[t]) for t in range(len(time))]
         sin_alpha_F = [sin(alpha*F[t]) for t in range(len(time))]
@@ -59,24 +60,28 @@ def simpleGASKET(rhoBetas,rho,time,alphas,betas,useCorrection = False):
             sab[i] = np.trapz(integrand,time) * alpha_exp[a] 
 
             if useCorrection:
-                if i > 10 and oscBegin == None: 
-                    if largeDifferences(sab[i-2:i+1]) and slopesDiffer(sab[i-2:i+1]):
-                        oscBegin = betas[b]
-                        treatOsc = betas[b-10] 
-                        unstable = True
-                        for j in range(-10,0):
-                            sab[b+j] = getSAB_T1_approx(rhoBetas,rho,[alpha],[betas[b+j]])[0]*exp(-betas[b+j])
-                if i > 20 and oscBegin == None:
-                    if sab[i] < 0:
-                        oscBegin = betas[b]
-                        treatOsc = betas[b-20]
-                        unstable = True
-                        for j in range(-20,0):
-                            sab[b+j] = getSAB_T1_approx(rhoBetas,rho,[alpha],[betas[b+j]])[0]*exp(-betas[b+j])
+                if oscBegin == None:
+                    if i > 20:
+                        if sab[i] < 0 or ( largeDifferences(sab[i-2:i+1]) and \
+                                           slopesDiffer(sab[i-2:i+1]) ):
+                            # Write down (1) where we noticed instabilities and
+                            #            (2) where we start to treat the instabilities
+                            oscBegin = betas[b]
+                            treatOsc = betas[b-20]
 
+                            unstable = True
+
+                            # Find the scaling factor to make sure that we don't
+                            # get a sharp jump while going from GASKET -> 1 Phonon
+                            oldVal = sab[b-20]
+                            newVal = getSAB_T1_approx(rhoBetas,rho,[alpha],[betas[b-20]])[0]*exp(-betas[b-20])
+                            scaling = oldVal/newVal
+
+                            for j in range(-20,0):
+                                sab[b+j] = scaling*getSAB_T1_approx(rhoBetas,rho,[alpha],[betas[b+j]])[0]*exp(-betas[b+j])
 
                 if unstable == True:
-                    sab[i] = getSAB_T1_approx(rhoBetas,rho,[alpha],[beta])[0]*exp(-betas[b])
+                    sab[i] = scaling*getSAB_T1_approx(rhoBetas,rho,[alpha],[beta])[0]*exp(-betas[b])
 
     return sab,H,F,oscBegin,treatOsc
 
