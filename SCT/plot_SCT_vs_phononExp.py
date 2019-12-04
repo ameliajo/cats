@@ -18,7 +18,7 @@ if __name__=="__main__":
     invT = 1.0/T
     rhoBetas = [rhoX_val*invT for rhoX_val in rho_x]
 
-    alphas = [0.01, 10, 100]
+    alphas = [0.01]#, 10, 100]
     betas  = list(np.linspace(0,50,51))
 
     T_eff = getEffectiveTemp(rhoBetas,rho_y,T)

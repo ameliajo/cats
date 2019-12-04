@@ -12,9 +12,15 @@ def getEffectiveTemp(rhoBetas,rho,T):
     return (np.trapz(integrand1,rhoBetas)+np.trapz(integrand2,rhoBetas))*T*0.5
 
 def SCT(alpha,beta,T,T_eff):
-    return (4.0*pi*alpha*T_eff/T)**0.5             * \
-            exp(-(alpha-beta)**2/(alpha*T_eff/T)) * \
-            exp(-beta)
+    neg_side_non_sym = (4.0*pi*alpha*T_eff/T)**-0.5           * \
+                        exp(-(alpha-beta)**2/(alpha*T_eff/T)) 
+    pos_side_non_sym = neg_side_non_sym * exp(-beta)
+    sym = pos_side_non_sym * exp(beta*0.5)
+    return sym
+
+    #return (4.0*pi*alpha*T_eff/T)**-0.5           * \
+    #        exp(-(alpha-beta)**2/(alpha*T_eff/T)) * \
+    #        exp(-beta)
 
 
 

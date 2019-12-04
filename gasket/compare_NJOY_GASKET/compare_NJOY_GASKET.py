@@ -67,7 +67,7 @@ def doThePlotting(alphas,betas,sab,linestyle,scalarMap):
                     break
 
         plt.plot(betas[:-1],chunk[:-1],color=scalarMap.to_rgba(a),linewidth=0.5,\
-                 linestyle=linestyle,markersize=5,marker='o')
+                 linestyle=linestyle,markersize=0,marker='o')
 
 def plot_H_or_F(time,func,linestyle,color):
     plt.plot(time,func,color=color,linewidth=2,linestyle=linestyle)
