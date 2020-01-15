@@ -1,5 +1,14 @@
 import matplotlib.pyplot as plt
 
+
+misccolors = ['#1f77b4','#aec7e8','#ff7f0e','#ffbb78','#2ca02c','#98df8a',\
+    '#d62728','#ff9896','#9467bd','#c5b0d5','#8c564b','#c49c94','#e377c2',\
+    '#f7b6d2','#7f7f7f','#c7c7c7','#bcbd22','#dbdb8d','#17becf','#9edae5']
+
+colors = ["#F8B195", "#F67280", "#C06C84", "#6C5B7B", "#355C7D"]
+colors = ["#99B898", "#FECEAB", "#FF847C", "#E84A5F", "#2A363B"]
+
+
 dwf_graphite = [2.1997,  2.7448,  3.2912,  3.8510,  4.4210,  4.9969, 6.1624,  7.3387,  9.6287, 11.992]
 dwf_Be       = [3.16663, 3.88842, 4.62944, 5.40517, 6.19880, 7.0042, 8.63665, 10.2865, 0.0,    0.0   ]
 dwf_BeO      = [2.153,   2.6374,  3.1348,  3.6513,  4.1798,  4.7164, 5.8052,  6.9068,  0.0,    0.0   ]
@@ -27,15 +36,20 @@ for t in range(len(temps)):
     njoy_Be_in_BeO[t] /= (Be_in_BeO_A*kb*temps[t])
 
 
-#plt.plot(temps,dwf_graphite,label='hard coded')
-#plt.plot(temps,njoy_crystalline_graphite,label='crystal')
+plt.plot(temps,dwf_graphite,label='hard coded graphite',color=colors[0],linestyle='dashed',linewidth=3)
+plt.plot(temps,njoy_crystalline_graphite,label='njoy crystalline graphite',color=colors[0],linewidth=3)
 #plt.plot(temps,njoy_reactor_graphite_10p,label='10p')
 #plt.plot(temps,njoy_reactor_graphite_30p,label='30p')
+#plt.legend(loc='best')
+#plt.show()
 
-#plt.plot(temps,dwf_Be,label='hard coded Be')
-#plt.plot(temps,njoy_Be_metal,label='njoy generated Be')
-plt.plot(temps,dwf_BeO,label='hard coded Be in BeO')
-plt.plot(temps,njoy_Be_in_BeO,label='njoy Be in BeO')
+plt.plot(temps,dwf_Be,label='hard coded Be',color=colors[1],linestyle='dashed',linewidth=3)
+plt.plot(temps,njoy_Be_metal,label='njoy generated Be',color=colors[1],linewidth=3)
+#plt.legend(loc='best')
+#plt.show()
+
+plt.plot(temps,dwf_BeO,label='hard coded Be in BeO',color=colors[2],linestyle='dashed',linewidth=3)
+plt.plot(temps,njoy_Be_in_BeO,label='njoy Be in BeO',color=colors[2],linewidth=3)
 
 plt.legend(loc='best')
 plt.show()

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+colors = ["#99B898", "#FECEAB", "#FF847C", "#E84A5F", "#2A363B"]
 
 kb = 8.617333e-5
 
@@ -29,12 +30,13 @@ for t in range(len(temp_ch2)):
     njoy_h_in_ch2[t] /= (h_in_ch2_A*kb*temp_ch2[t])
 
 dwf_polyethylene = [c11c+(temp-c11b)*(c11e-c11c)/(c11d-c11b) for temp in temp_ch2]
-plt.plot(temps,dwf_h_in_zrh,label='hard coded H(ZrH)')
-plt.plot(temps,njoy_h_in_zrh,label='njoy H(ZrH)')
-plt.plot(temps,dwf_zr_in_zrh,label='hard coded Zr(ZrH)')
-plt.plot(temps,njoy_zr_in_zrh,label='njoy Zr(ZrH)')
-plt.plot(temp_ch2,dwf_polyethylene,label='hard coded polyethylene')
-plt.plot(temp_ch2,njoy_h_in_ch2,label='njoy polyethylene')
+plt.plot(temps,dwf_h_in_zrh,label='hard coded H(ZrH)',color=colors[0],linestyle='dashed',linewidth=3)
+plt.plot(temps,njoy_h_in_zrh,label='njoy H(ZrH)',color=colors[0],linewidth=3)
+plt.plot(temps,dwf_zr_in_zrh,label='hard coded Zr(ZrH)',color=colors[1],linestyle='dashed',linewidth=3)
+plt.plot(temps,njoy_zr_in_zrh,label='njoy Zr(ZrH)',color=colors[1],linewidth=3)
+plt.plot(temp_ch2,dwf_polyethylene,label='hard coded polyethylene',color=colors[2],linestyle='dashed',linewidth=3)
+plt.plot(temp_ch2,njoy_h_in_ch2,label='njoy polyethylene',color=colors[2],linewidth=3)
+
 plt.legend(loc='best')
 plt.show()
 
