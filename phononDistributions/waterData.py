@@ -67,7 +67,7 @@ Q = uniformY[1:]
 
 #kbT = 0.0255
 
-#rho_f = interp1d([0.0]+X,[0.0]+Q,bounds_error=False,fill_value=0.0,kind='cubic')
+rho_f = interp1d([0.0]+X,[0.0]+Q,bounds_error=False,fill_value=0.0,kind='cubic')
 #uniform_x = np.linspace(0,X[-1],3*len(X))
 #uniform_y = rho_f(uniform_x)
 #uniform_x = [x/kbT for x in uniform_x]
@@ -109,15 +109,33 @@ if __name__=="__main__":
 
 
     if plot_just_damian == True:
-        plt.plot(X,Q,color=colors[3],linewidth=1)
-        plt.fill_between(X,Q,color=colors[3],alpha=0.4,label='H in H2O')
-        plt.tick_params(axis='y',which='both',left=False,labelleft=False)
-        plt.title('Normalized Phonon Distribution for H in H2O')
+        #plt.plot(X,Q,color=colors[3],linewidth=1)
+        #plt.fill_between(X,Q,color=colors[3],alpha=0.4,label='H in H2O')
+        #plt.tick_params(axis='y',which='both',left=False,labelleft=False)
+        #plt.title('Normalized Phonon Distribution for H in H2O')
         plt.xlabel('Energy (meV)'); plt.ylabel('Normalized')
-        plt.show()
+        #plt.show()
+
+
+    from math import sinh
+    plt.rcParams.update({'font.size': 12})
+    invTemp = 1.0/0.0255
+    betas = [x*invTemp for x in X]
+    plt.plot(betas,Q,color=colors[3],linewidth=1,label="Phonon DOS")
+    T1 = [Q[b]/(2.0*betas[b]*sinh(betas[b]*0.5)) for b in range(len(betas))]
+    plt.plot(betas,T1,color=colors[4],linewidth=1,label="T1")
+
+
+    T2 = np.convolve(T1,T1)
+    betas2 = [(betas[1]-betas[0])*i for i in range(len(T2))]
+    plt.plot(betas2,T2,color=colors[0],linewidth=1,label="T2")
 
 
 
+    plt.xlabel('beta (energy transfer)'); plt.ylabel('Normalized')
+    plt.legend(loc='best')
+    plt.yscale('log')
+    plt.show()
 
 
 

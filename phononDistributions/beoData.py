@@ -51,8 +51,8 @@ uniform_x = [x/kbT for x in uniform_x]
 if __name__=="__main__":
     from colors import colors
 
-    plt.plot(X,Q,color=colors[3],linewidth=1)
-    plt.fill_between(X,Q,color=colors[3],alpha=0.4,label='Be in BeO')
+    plt.plot([x*1000 for x in X],Q,color=colors[3],linewidth=1)
+    plt.fill_between([x*1000 for x in X],Q,color=colors[3],alpha=0.4,label='Be in BeO')
     plt.tick_params(axis='y',which='both',left=False,labelleft=False)
     plt.title('Normalized Phonon Distribution for Be in BeO')
     plt.xlabel('Energy (meV)')

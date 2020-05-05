@@ -50,7 +50,7 @@ should    be grouped    in pairs).``
 If the ``--pep-references`` option was supplied, there should be a live link to PEP 258 here.
 
 Math
-====
+======
 
 This is a test. Here is an equation:
 :math:`X_{0:5} = (X_0, X_1, X_2, X_3, X_4)`.
@@ -65,10 +65,10 @@ Here is another:
     \left( \sin \theta \, \frac{\partial f}{\partial \theta} \right) +
     \frac{1}{r^2 \sin^2\theta} \frac{\partial^2 f}{\partial \phi^2}
 
-You can add a link to equations like the one above :eq:`This is a label` by using ``:eq:``.
+.. You can add a link to equations like the one above :eq:`This is a label` by using ``:eq:``.
 
 Meta
-====
+======
 
 .. meta::
    :keywords: reStructuredText, demonstration, demo, parser
@@ -255,13 +255,13 @@ Footnotes
 
 .. [*] This footnote shows the next symbol in the sequence.
 
-.. [4] Here's an unreferenced footnote, with a reference to a
+.. .. [4] Here's an unreferenced footnote, with a reference to a
    nonexistent footnote:
 
 Citations
 ---------
 
-.. [11] This is the citation I made, let's make this extremely long so that we can tell that it doesn't follow the normal responsive table stuff.
+.. .. [11] This is the citation I made, let's make this extremely long so that we can tell that it doesn't follow the normal responsive table stuff.
 
 .. [12] This citation has some ``code blocks`` in it, maybe some **bold** and
        *italics* too. Heck, lets put a link to a meta citation [13]_ too.

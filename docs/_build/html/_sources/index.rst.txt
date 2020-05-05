@@ -11,7 +11,6 @@ Welcome to cats's documentation!
    :caption: Contents:
 
    demo
-   examples
 
 
 

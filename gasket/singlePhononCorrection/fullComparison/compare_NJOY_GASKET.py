@@ -34,7 +34,6 @@ def getValuesFromInput(name):
         oscBegin        = importMod(fName).oscBegin 
         correctionBegin = importMod(fName).correctionBegin 
         name   = importMod(fName).name
-        #H, F   = [x*temp for x in H], [x*temp for x in F]
         sab = [sab[b+a*len(betas)]*np.exp(betas[b]*0.5) \
                for a in range(len(alphas)) for b in range(len(betas))]
         return temp,alphas,betas,sab,num_t,delta_t,H,F,name,oscBegin,correctionBegin
@@ -43,7 +42,6 @@ def getValuesFromInput(name):
         fName = 'njoy_output_'+name[1]
         alphas = importMod(fName).alphas; betas  = importMod(fName).betas
         temp   = importMod(fName).temp;   sab    = importMod(fName).sab
-        #name   = importMod(fName).name
         name = ''
         sab = [sab[b+a*len(betas)]*np.exp(-betas[b]*0.5) \
                for a in range(len(alphas)) for b in range(len(betas))]
@@ -66,15 +64,19 @@ if __name__=='__main__':
     plt.rcParams.update({'font.size': 17})
     if len(sys.argv) == 1: print('Tell me what to plot!'); exit()
 
+    num = sys.argv[1].split('.')[-1]
+    arguments = ['n.'+str(num), 'g.'+str(num), 'gc.'+str(num)] if sys.argv[1][0] == 'a' else sys.argv[1:]
+
+
     option = 0
     #option = 1
 
     if option == 0:
-        cnorm = colors.Normalize(vmin=0,vmax=len(sys.argv))
+        cnorm = colors.Normalize(vmin=0,vmax=len(arguments))
         #mapp = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('tab20')) 
-        mapp = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('Set3')) 
+        mapp = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('Set1')) 
 
-        for i,name in enumerate(sys.argv[1:]):
+        for i,name in enumerate(arguments):
             T,alphas,betas,sab,nt,dt,H,F,title,oscBegin,correctionBegin = \
               getValuesFromInput(name)
             label = 'gasket'           if name.split('.')[0] == 'g'  else \
@@ -111,11 +113,11 @@ if __name__=='__main__':
         plt.show()
 
     if option == 1:
-        assert(len(sys.argv) == 2)
-        cnorm = colors.Normalize(vmin=0,vmax=len(sys.argv))
+        assert(len(arguments) == 2)
+        cnorm = colors.Normalize(vmin=0,vmax=len(arguments))
         mapp = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('tab10')) 
 
-        T,alphas,betas,sab,nt,dt,H,F,title,oscBegin,correctionBegin = getValuesFromInput(sys.argv[1])
+        T,alphas,betas,sab,nt,dt,H,F,title,oscBegin,correctionBegin = getValuesFromInput(arguments[0])
         time = [i*dt for i in range(len(H))]
         invArea = 1.0/np.trapz(F,time); F = [invArea*x for x in F]
         invArea = 1.0/np.trapz(H,time); H = [invArea*x for x in H]

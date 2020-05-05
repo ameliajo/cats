@@ -20,21 +20,12 @@
   <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -175,12 +166,12 @@
 </div>
 <div class="section" id="overview-of-scattering">
 <h2>Overview of Scattering<a class="headerlink" href="#overview-of-scattering" title="Permalink to this headline">¶</a></h2>
-<p>The probability of a neutron with initial energy and solid angle <span class="math">\((E,\Omega)\)</span> scattering to have some final energy and solid angle <span class="math">\((E',\Omega')\)</span> is described using the double differential scattering cross section <span class="math">\(\sigma(E\rightarrow E', \Omega\rightarrow\Omega')\)</span>. This cross section describes both elastic and inelastic scattering, both of which have a coherent and incoherent contribution.</p>
+<p>The probability of a neutron with initial energy and solid angle <span class="math notranslate nohighlight">\((E,\Omega)\)</span> scattering to have some final energy and solid angle <span class="math notranslate nohighlight">\((E',\Omega')\)</span> is described using the double differential scattering cross section <span class="math notranslate nohighlight">\(\sigma(E\rightarrow E', \Omega\rightarrow\Omega')\)</span>. This cross section describes both elastic and inelastic scattering, both of which have a coherent and incoherent contribution.</p>
 <img alt="_images/scatteringBreakdown.jpeg" src="_images/scatteringBreakdown.jpeg" />
 <p>In elastic scattering, total kinetic energy (i.e. sum of neutron and target kinetic energy) is conserved, which is not the case for inelastic scattering. Inelastic scattering thus requires for some excitation of the target to occur, which accounts for the difference between initial and final kinetic energy.</p>
 <div class="section" id="elastic-scattering">
 <h3>Elastic Scattering<a class="headerlink" href="#elastic-scattering" title="Permalink to this headline">¶</a></h3>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\sigma(E\rightarrow E,\Omega\rightarrow\Omega') = \sigma_{coh}(E\rightarrow E,\Omega\rightarrow\Omega') + \sigma_{inc}(E\rightarrow E',\Omega\rightarrow\Omega')\]</div>
 </div>
 <div class="section" id="inelastic-scattering">
@@ -188,28 +179,28 @@
 <p>For inelastic scattering kinetic energy is not conserved, meaning that some excitation (or de-excitation) occurred. For high energy neutrons, this excitation is a <em>nuclear</em> excitation, where the target nucleus is brought to some excited state. This requires a significant amount of energy, and thus nuclear inelastic scattering is a <em>threshold</em> reaction, as seen below.</p>
 <div class="figure align-center" id="id1">
 <a class="reference internal image-reference" href="_images/U238_xs.png"><img alt="_images/U238_xs.png" src="_images/U238_xs.png" style="width: 80%;" /></a>
-<p class="caption"><span class="caption-text">Elastic and nuclear inelastic scattering cross sections for U-238 (from NNDC). Note that nuclear inelastic scattering is a threshold reaction that does not appreciable contribute until incoming neutrons have an incoming energy of about 0.1 MeV.</span></p>
+<p class="caption"><span class="caption-text">Elastic and nuclear inelastic scattering cross sections for U-238 (from NNDC). Note that nuclear inelastic scattering is a threshold reaction that does not appreciable contribute until incoming neutrons have an incoming energy of about 0.1 MeV.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <p>For thermal (low energy) neutrons, this excitation is typically a <em>molecular</em> or <em>lattice</em> excitation, where vibrational modes of a multi-atom system are excited. Molecular excitations can be induced by neutrons with energy on the order of 1 eV and do not exhibit the same extreme threshold behavior as does nuclear excitations. Thermal inelastic scattering is thus focused on molecular excitations.</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\sigma(E\rightarrow E',\Omega\rightarrow\Omega') = \sigma_{coh}(E\rightarrow E',\Omega\rightarrow\Omega') + \sigma_{inc}(E\rightarrow E,\Omega\rightarrow\Omega')\]</div>
 </div>
 </div>
 <div class="section" id="pair-distribution-function">
 <h2>Pair Distribution Function<a class="headerlink" href="#pair-distribution-function" title="Permalink to this headline">¶</a></h2>
-<p>The scattering kernel <span class="math">\(\sigma_s(E\rightarrow E',\Omega\rightarrow\Omega')\)</span> is typically separated into a coherent and an incoherent contribution (Note that in separating the coherent and incoherent contributions, one ignores spin-correlation effects. These effects are of little to no importance for most applications, except for instances like thermal scattering in liquid hydrogen, which has correlated spins (CITE PARKS). Such materials are considered apart from this simple coherent/incoherent discussion), both of which can be defined in terms of so-called “van Hove pair distribution function” <span class="math">\(G(\boldsymbol{r},t)\)</span>, which contains information regarding the scattering material. The pair distribution function is split into two terms <span class="math">\(G(\boldsymbol{r},t)=G_s(\boldsymbol{r},t)+G_d(\boldsymbol{r},t)\)</span> which represent a “self” term and a “distinct” term, respectively. In a classical system, <span class="math">\(G(\boldsymbol{r},t)\)</span> can be interpreted as the probability that an atom will be at location <span class="math">\(\boldsymbol{r}\)</span> at time <span class="math">\(t\)</span>, given that an atom existed at the origin at time <span class="math">\(t=0\)</span>.</p>
-<p>The first term, <span class="math">\(G_s(\boldsymbol{r},t)\)</span>, represents the probability the particle originally at the origin would later exist at position <span class="math">\(\boldsymbol{r}\)</span>. The latter term <span class="math">\(G_d(\boldsymbol{r},t)\)</span> assumes that the two particles observed were not the same (CITE pairDist,bell-glasstone).</p>
+<p>The scattering kernel <span class="math notranslate nohighlight">\(\sigma_s(E\rightarrow E',\Omega\rightarrow\Omega')\)</span> is typically separated into a coherent and an incoherent contribution (Note that in separating the coherent and incoherent contributions, one ignores spin-correlation effects. These effects are of little to no importance for most applications, except for instances like thermal scattering in liquid hydrogen, which has correlated spins (CITE PARKS). Such materials are considered apart from this simple coherent/incoherent discussion), both of which can be defined in terms of so-called “van Hove pair distribution function” <span class="math notranslate nohighlight">\(G(\boldsymbol{r},t)\)</span>, which contains information regarding the scattering material. The pair distribution function is split into two terms <span class="math notranslate nohighlight">\(G(\boldsymbol{r},t)=G_s(\boldsymbol{r},t)+G_d(\boldsymbol{r},t)\)</span> which represent a “self” term and a “distinct” term, respectively. In a classical system, <span class="math notranslate nohighlight">\(G(\boldsymbol{r},t)\)</span> can be interpreted as the probability that an atom will be at location <span class="math notranslate nohighlight">\(\boldsymbol{r}\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>, given that an atom existed at the origin at time <span class="math notranslate nohighlight">\(t=0\)</span>.</p>
+<p>The first term, <span class="math notranslate nohighlight">\(G_s(\boldsymbol{r},t)\)</span>, represents the probability the particle originally at the origin would later exist at position <span class="math notranslate nohighlight">\(\boldsymbol{r}\)</span>. The latter term <span class="math notranslate nohighlight">\(G_d(\boldsymbol{r},t)\)</span> assumes that the two particles observed were not the same (CITE pairDist,bell-glasstone).</p>
 <p>Using these definitions of the pair distribution functions, the coherent and incoherent scattering kernels for a homogeneous system consisting of bound scatterers of a single nuclide can be described as</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\sigma_{coh}(E\rightarrow E',\Omega\rightarrow\Omega') = \frac{\sigma_{coh}}{4\pi} \sqrt{\frac{E'}{E}} \frac{1}{2\pi} \int dt\int d\boldsymbol{r}~\mathrm{e}^{i(\boldsymbol{\kappa\cdot r}-\epsilon t/\hbar)} G(\boldsymbol{r},t)\label{eq:pairDistInXS_coh}\]</div>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\sigma_{inc}(E\rightarrow E',\Omega\rightarrow\Omega') = \frac{\sigma_{inc}}{4\pi} \sqrt{\frac{E'}{E}} \frac{1}{2\pi} \int dt\int d\boldsymbol{r}~\mathrm{e}^{i(\boldsymbol{\kappa\cdot r}-\epsilon t/\hbar)} G_s(\boldsymbol{r},t)\label{eq:pairDistInXS_inc}\]</div>
-<p>where <span class="math">\(\hbar\boldsymbol{\kappa}\)</span> is the change in neutron momentum, <span class="math">\(\epsilon\)</span> is the change in energy, and <span class="math">\(\sigma_{coh}\)</span> and <span class="math">\(\sigma_{inc}\)</span> are the bound coherent and incoherent scattering cross sections, respectively (CITE bell-glasstone). These bound cross sections can be defined in terms of the first and second moments of the scattering length <span class="math">\(b\)</span>,</p>
-<div class="math">
+<p>where <span class="math notranslate nohighlight">\(\hbar\boldsymbol{\kappa}\)</span> is the change in neutron momentum, <span class="math notranslate nohighlight">\(\epsilon\)</span> is the change in energy, and <span class="math notranslate nohighlight">\(\sigma_{coh}\)</span> and <span class="math notranslate nohighlight">\(\sigma_{inc}\)</span> are the bound coherent and incoherent scattering cross sections, respectively (CITE bell-glasstone). These bound cross sections can be defined in terms of the first and second moments of the scattering length <span class="math notranslate nohighlight">\(b\)</span>,</p>
+<div class="math notranslate nohighlight">
 \[\sigma_{coh}=4\pi\langle a\rangle^2\]</div>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\sigma_{inc}=4\pi\left(\langle a^2\rangle-\langle a\rangle^2 \right)\]</div>
-<p>where <span class="math">\(\langle...\rangle\)</span> denotes the average (CITE sturm1993dynamic). These definitions assume that the spins of adjacent nuclei are randomly oriented. For reactor purposes this is a very good approximation, since the spins of neighboring nuclei are typically uncorrelated except at very low temperatures.</p>
+<p>where <span class="math notranslate nohighlight">\(\langle...\rangle\)</span> denotes the average (CITE sturm1993dynamic). These definitions assume that the spins of adjacent nuclei are randomly oriented. For reactor purposes this is a very good approximation, since the spins of neighboring nuclei are typically uncorrelated except at very low temperatures.</p>
 </div>
 </div>
 
