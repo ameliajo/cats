@@ -69,8 +69,8 @@ Q = uniformY[1:]
 
 
 if __name__=="__main__":
-    plot_just_damian = False 
-    plot_damian_beo = True
+    plot_just_damian = True
+    plot_damian_beo = False
     colors = ["#F8B195", "#F67280", "#C06C84", "#6C5B7B", "#355C7D"]
     colors = ["#99B898", "#FECEAB", "#FF847C", "#E84A5F", "#2A363B"]
 
