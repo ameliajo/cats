@@ -54,6 +54,42 @@ temperature = [283.6,293.6,300.0,323.6,350.0,373.6,400.0,423.6,450.0,473.6,500.0
 yVec = [y_283,y_293,y_300,y_323,y_350,y_373,y_400,y_423,y_450,y_473,y_500,y_523,y_550,y_573,y_600,y_623,y_650,y_800]
 
 
+if __name__=="__main__":
+    import matplotlib.pyplot as plt
+    import matplotlib.colors as colors
+    import matplotlib.cm as cmx
+
+
+    def prepPlot(vec):
+        cnorm = colors.Normalize(vmin=vec[0],vmax=vec[-1])
+        #scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('hot')) #hot autumn tab10
+        scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('tab20')) #hot autumn tab10
+        scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('hot')) #hot autumn tab10
+        mymap = colors.LinearSegmentedColormap.from_list('test',\
+                [scalarMap.to_rgba(vec[a]) for a in range(len(vec))])
+        colorBar = plt.contourf([[0,0],[0,0]], vec, cmap=mymap)
+        plt.clf()
+        return scalarMap, colorBar
+ 
+
+    def finishPlotting(colorBar):
+        ax = plt.gca()
+        plt.colorbar(colorBar).ax.set_ylabel('Temperature [K]')
+        plt.show()
+
+    
+    scalarMap, colorBar = prepPlot(temperature)
+
+    for i,dist in enumerate(yVec):
+        plt.plot(x,dist,color=scalarMap.to_rgba(temperature[i]))
+
+    plt.xlabel('Energy (eV)')
+    plt.ylabel('Arbitrary')
+    plt.title('Phonon Distribution for H in H$_2$O at Various Temperatures')
+    finishPlotting(colorBar)
+
+
+
 
 
 

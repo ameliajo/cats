@@ -62,7 +62,7 @@ if __name__=="__main__":
 
     alphas = [0.001,0.1,1.0,5.0,8.0]#,10.0,20.0]
     alphas = [0.001,0.1,1.0]#5.0,8.0]#,10.0,20.0]
-    alphas = [0.001]
+    #alphas = [0.001]
     #betas  = list(np.linspace(0,10,41))
     betas1  = list(np.linspace(3,9,21))
 

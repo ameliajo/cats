@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
-from h2oDists import *
 
 
 def getInterpolatedDist(temp):
@@ -13,17 +12,22 @@ def getInterpolatedDist(temp):
     return fullG_array
 
 
-temp = 410.0
-array = np.array(yVec)
-fullG_array = getInterpolatedDist(temp)
 
-for i,vec in enumerate(array):
-    plt.plot(x,vec,label=str(temperature[i]))
+if __name__=="__main__":
+    import matplotlib.pyplot as plt
+    from h2oDists import *
+
+    temp = 410.0
+    array = np.array(yVec)
+    fullG_array = getInterpolatedDist(temp)
+
+    for i,vec in enumerate(array):
+        plt.plot(x,vec,label=str(temperature[i]))
 
 
-plt.legend(loc='best')
-plt.plot(x,fullG_array,'ko')
-plt.show()
+    plt.plot(x,fullG_array,'ko',label='Interpolated at '+str(temp))
+    plt.legend(loc='best')
+    plt.show()
 
 
 
