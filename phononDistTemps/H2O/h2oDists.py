@@ -61,13 +61,13 @@ if __name__=="__main__":
 
 
     def prepPlot(vec):
-        cnorm = colors.Normalize(vmin=vec[0],vmax=vec[-1])
-        #scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('hot')) #hot autumn tab10
-        scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('tab20')) #hot autumn tab10
-        scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('hot')) #hot autumn tab10
+        cnorm = colors.Normalize(vmin=vec[0],vmax=vec[-1]+50)
+        #scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('tab20')) #hot autumn tab10
+        scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('inferno')) #hot autumn tab10
+        scalarMap = cmx.ScalarMappable(norm=cnorm,cmap=plt.get_cmap('terrain')) #hot autumn tab10
         mymap = colors.LinearSegmentedColormap.from_list('test',\
-                [scalarMap.to_rgba(vec[a]) for a in range(len(vec))])
-        colorBar = plt.contourf([[0,0],[0,0]], vec, cmap=mymap)
+                [scalarMap.to_rgba(val) for val in vec])
+        colorBar = plt.contourf([[0,0],[0,0]], vec + [vec[-1]+50], cmap=mymap)
         plt.clf()
         return scalarMap, colorBar
  
@@ -75,17 +75,22 @@ if __name__=="__main__":
     def finishPlotting(colorBar):
         ax = plt.gca()
         plt.colorbar(colorBar).ax.set_ylabel('Temperature [K]')
+        #ax.set_facecolor('silver')
+        #ax.set_facecolor('#F5F5F5')
+        #ax.set_facecolor('#d6fffe')
+        #ax.set_facecolor('#ccffff')
+        ax.set_facecolor('#e6ffff')
         plt.show()
 
     
     scalarMap, colorBar = prepPlot(temperature)
 
     for i,dist in enumerate(yVec):
-        plt.plot(x,dist,color=scalarMap.to_rgba(temperature[i]))
+        plt.plot(x,dist,color=scalarMap.to_rgba(temperature[i]),linewidth=2.0)
 
     plt.xlabel('Energy (eV)')
     plt.ylabel('Arbitrary')
-    plt.title('Phonon Distribution for H in H$_2$O at Various Temperatures')
+    plt.title('Solid-type Contribution to the Phonon Distribution\nfor H in H$_2$O at Various Temperatures')
     finishPlotting(colorBar)
 
 
