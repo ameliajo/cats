@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<materials>
+  <material depletable="true" id="1" name="uo2">
+    <density units="g/cm3" value="10.0" />
+    <nuclide ao="0.03" name="U235" />
+    <nuclide ao="0.97" name="U238" />
+    <nuclide ao="2.0" name="O16" />
+  </material>
+  <material id="2" name="zrh">
+    <density units="g/cm3" value="5.8" />
+    <nuclide ao="0.5145" name="Zr90" />
+    <nuclide ao="0.1122" name="Zr91" />
+    <nuclide ao="0.1715" name="Zr92" />
+    <nuclide ao="0.1738" name="Zr94" />
+    <nuclide ao="0.028" name="Zr96" />
+    <nuclide ao="0.99984426" name="H1" />
+    <nuclide ao="0.00015574" name="H2" />
+    <sab name="c_H_in_ZrH" />
+    <sab name="c_Zr_in_ZrH" />
+  </material>
+</materials>
